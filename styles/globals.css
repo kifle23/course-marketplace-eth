@@ -31,3 +31,8 @@ body {
     text-wrap: balance;
   }
 }
+
+.fit {
+  min-height: calc(100vh - 88px);
+}
+
