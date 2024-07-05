@@ -6,23 +6,24 @@ interface CourseListProps {
 
 export default function List({ courses }: CourseListProps) {
   return (
-    <section className="grid grid-cols-2 gap-4 mb-5">
+    <section className="grid md:grid-cols-1 lg:grid-cols-2 gap-4 mb-5">
       {courses.map((course) => (
         <div
           key={course.id}
           className="bg-white rounded-xl shadow-md overflow-hidden md:max-w-2xl"
         >
-          <div className="md:flex">
-            <div className="md:flex-shrink-0">
+          <div className="flex">
+            <div className="relative w-1/3 h-56">
               <Image
-                className="h-48 w-full object-cover md:w-48"
+                className="object-cover"
                 src={course.coverImage}
                 alt={course.title}
-                width={448}
-                height={299}
+                fill
+                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                priority
               />
             </div>
-            <div className="p-8">
+            <div className="w-2/3 p-8">
               <div className="uppercase tracking-wide text-sm text-indigo-500 font-semibold">
                 {course.type}
               </div>
