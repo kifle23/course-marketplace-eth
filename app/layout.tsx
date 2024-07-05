@@ -18,10 +18,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <main className="relative bg-white overflow-hidden">
-          <div className="relative max-w-7xl mx-auto px-4">
+        <main className="bg-white overflow-hidden">
+          <div className="max-w-7xl mx-auto px-4">
             <Nav />
-            {children}
+            <div className="fit">{children}</div>
           </div>
         </main>
         <Footer />
