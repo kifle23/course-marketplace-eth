@@ -1,11 +1,18 @@
-import Image from "next/image";
+import { Breadcrumbs, Hero } from "@components/common";
+import { EthRates, WalletBar } from "@components/web3";
+import { CourseList } from "@components/course";
+import { OrderCard } from "@components/order";
 
 export default function Home() {
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <h1 className="text-4xl font-bold">Welcome to Marketplace ETH</h1>
-      <Image src="/next.svg" alt="Ethereum logo" width={200} height={200} />
-    </main>
+    <div className="fit">
+      <Hero />
+      <Breadcrumbs />
+      <WalletBar />
+      <EthRates />
+      <OrderCard />
+      <CourseList />
+    </div>
   );
 }
 
