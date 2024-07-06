@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 
 interface HeroProps {
   title: string;
@@ -37,34 +38,39 @@ export default function Hero({ title, description, image }: HeroProps) {
                 </p>
                 <div className="mt-5 sm:mt-8 sm:flex sm:justify-center lg:justify-start">
                   <div className="rounded-md shadow">
-                    <a
+                    <Link
                       href="#"
                       className="w-full flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 md:py-4 md:text-lg md:px-10"
                     >
                       Get started
-                    </a>
+                    </Link>
                   </div>
                   <div className="mt-3 sm:mt-0 sm:ml-3">
-                    <a
+                    <Link
                       href="#"
                       className="w-full flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-indigo-700 bg-indigo-100 hover:bg-indigo-200 md:py-4 md:text-lg md:px-10"
                     >
                       Watch
-                    </a>
+                    </Link>
                   </div>
                 </div>
               </div>
             </main>
           </div>
         </div>
-        <div className="lg:absolute lg:inset-y-0 lg:right-0 lg:w-1/2">
-          <Image
-            className="h-56 w-full object-cover sm:h-72 md:h-96 lg:w-full lg:h-full"
-            src={image}
-            alt={title}
-            width={2850}
-            height={1900}
-          />
+        <div className="relative lg:absolute lg:inset-y-0 lg:right-0 lg:w-1/2 lg:bottom-[8vh]">
+          <div className="h-full w-full">
+            <Image
+              className="w-full h-full object-cover"
+              src={image}
+              alt={title}
+              fill
+              sizes="(max-width: 640px) 100vw,
+             (max-width: 768px) 100vw,
+             (max-width: 1024px) 100vw,
+             100vw"
+            />
+          </div>
         </div>
       </div>
     </section>
