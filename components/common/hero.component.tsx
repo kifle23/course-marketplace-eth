@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 export default function Hero() {
   return (
     <section className="lg:2/6 text-left my-28">
@@ -10,12 +12,12 @@ export default function Hero() {
       </div>
       <div className="mt-5 sm:mt-8 flex lg:justify-start">
         <div className="rounded-md shadow">
-          <a
+          <Link
             href="#"
             className="w-full flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 md:py-4 md:text-lg md:px-10"
           >
             Get started
-          </a>
+          </Link>
         </div>
       </div>
     </section>

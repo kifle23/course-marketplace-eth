@@ -1,41 +1,45 @@
 import Image from "next/image";
+import { Course } from "@content/courses/types";
+import Link from "next/link";
+interface CourseListProps {
+  courses: Course[];
+}
 
-export default function List() {
-	return (
-		<section className="grid grid-cols-2 gap-4 mb-5">
-        {Array.from({ length: 4 }).map((_, i) => (
-          <div
-            key={i}
-            className="bg-white rounded-xl shadow-md overflow-hidden md:max-w-2xl"
-          >
-            <div className="md:flex">
-              <div className="md:flex-shrink-0">
-                <Image
-                  className="h-48 w-full object-cover md:w-48"
-                  src="https://images.unsplash.com/photo-1515711660811-48832a4c6f69?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=448&q=80"
-                  alt="Man looking at item at a store"
-                  width={448}
-                  height={299}
-                />
+export default function List({ courses }: CourseListProps) {
+  return (
+    <section className="grid md:grid-cols-1 lg:grid-cols-2 gap-4 mb-5">
+      {courses.map((course) => (
+        <div
+          key={course.id}
+          className="bg-white rounded-xl shadow-md overflow-hidden md:max-w-2xl"
+        >
+          <div className="flex">
+            <div className="relative w-1/3 h-56">
+              <Image
+                className="object-cover"
+                src={course.coverImage}
+                alt={course.title}
+                fill
+                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                priority
+              />
+            </div>
+            <div className="w-2/3 p-8">
+              <div className="uppercase tracking-wide text-sm text-indigo-500 font-semibold">
+                {course.type}
               </div>
-              <div className="p-8">
-                <div className="uppercase tracking-wide text-sm text-indigo-500 font-semibold">
-                  Case study
-                </div>
-                <a
-                  href="#"
-                  className="block mt-1 text-lg leading-tight font-medium text-black hover:underline"
-                >
-                  Finding customers for your new business
-                </a>
-                <p className="mt-2 text-gray-500">
-                  Getting a new business off the ground is a lot of hard work.
-                  Here are five ideas you can use to find your first customers.
-                </p>
-              </div>
+              <Link
+                href={`/course/${course.slug}`}
+                className="block mt-1 text-lg leading-tight font-medium text-black hover:underline"
+              >
+                {course.title}
+              </Link>
+              <p className="mt-2 text-gray-500">{course.description}</p>
             </div>
           </div>
-        ))}
-      </section>
-	);
+        </div>
+      ))}
+    </section>
+  );
 }
+
