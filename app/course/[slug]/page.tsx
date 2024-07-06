@@ -26,8 +26,8 @@ export default async function CoursePage({ params, course }: CoursePageProps) {
           image={course.coverImage}
         />
       </div>
-      <KeyPoints />
-      <Curriculum />
+      <KeyPoints points={course.wsl} />
+      <Curriculum locked={true} />
       <Modal />
     </div>
   );

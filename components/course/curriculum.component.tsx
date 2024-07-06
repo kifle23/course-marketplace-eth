@@ -1,4 +1,10 @@
-export default function Curriculum() {
+import Link from "next/link";
+
+interface CurriculumProps {
+  locked: boolean;
+}
+
+export default function Curriculum({ locked }: CurriculumProps) {
   const lectures = [
     "How to init App",
     "How to get a help",
@@ -7,7 +13,7 @@ export default function Curriculum() {
     "How to write For Loops",
     "Safe operator",
   ];
-  
+
   return (
     <section className="max-w-5xl mx-auto">
       <div className="flex flex-col">
@@ -47,17 +53,23 @@ export default function Curriculum() {
                         </div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
-                        <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
-                          Unlocked
+                        <span
+                          className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
+                            locked
+                              ? "bg-red-100 text-red-800"
+                              : "bg-green-100 text-green-800"
+                          }`}
+                        >
+                          {locked ? "Locked" : "Unlocked"}
                         </span>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                        <a
+                        <Link
                           href="#"
                           className="text-indigo-600 hover:text-indigo-900"
                         >
-                          Play
-                        </a>
+                          {locked ? "Get Access" : "Play"}
+                        </Link>
                       </td>
                     </tr>
                   ))}
