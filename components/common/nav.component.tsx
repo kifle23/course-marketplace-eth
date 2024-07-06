@@ -96,9 +96,9 @@ export default function Nav() {
               </Link>
               <Link
                 href="/login"
-                className="block font-medium mb-4 text-indigo-600 hover:text-indigo-500"
+                className="px-8 py-3 border rounded-md text-base font-medium text-white bg-indigo-600 hover:bg-indigo-700 md:py-4 md:text-lg md:px-10"
               >
-                Log in
+                Connect Wallet
               </Link>
             </div>
           )}
