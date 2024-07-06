@@ -1,5 +1,5 @@
-import courses from "./index.json";
-import { Course, CourseMap } from "./types";
+import courses from './index.json';
+import { Course, CourseMap } from './types';
 
 export const getAllCourses = (): { data: Course[]; courseMap: CourseMap } => {
   return {
@@ -9,4 +9,9 @@ export const getAllCourses = (): { data: Course[]; courseMap: CourseMap } => {
       return acc;
     }, {}),
   };
+};
+
+export const getCourseBySlug = (slug: string): Course | null => {
+  const course = courses.find((course) => course.slug === slug);
+  return course || null;
 };
