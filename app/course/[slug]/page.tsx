@@ -1,10 +1,12 @@
 import { Modal } from "@components/common";
-import { Curriculum, Hero, KeyPoints } from "@components/course";
+import { Curriculum, CourseHero, KeyPoints } from "@components/course";
 
 export default function Page() {
   return (
     <div className="relative max-w-7xl mx-auto px-4">
-      <Hero />
+      <div className="py-4">
+        <CourseHero />
+      </div>
       <KeyPoints />
       <Curriculum />
       <Modal />
