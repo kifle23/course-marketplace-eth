@@ -15,6 +15,7 @@ interface Web3State {
   provider: any;
   contract: any;
   isLoading: boolean;
+  requireInstall: boolean;
   connect?: () => void;
 }
 interface Web3ProviderProps {
@@ -28,12 +29,14 @@ const createWeb3State = ({
   provider,
   contract,
   isLoading,
+  requireInstall,
 }: Partial<Web3State>): Web3State => {
   return {
     web3: web3 || null,
     provider: provider || null,
     contract: contract || null,
     isLoading: isLoading || false,
+    requireInstall: requireInstall || false,
   };
 };
 
@@ -71,9 +74,10 @@ export default function Web3Provider({ children }: Web3ProviderProps) {
   }, []);
 
   const _web3Api = useMemo(() => {
-    const { provider } = web3Api;
+    const { provider, isLoading, web3 } = web3Api;
     return {
       ...web3Api,
+      requireInstall: !isLoading && !web3,
       connect: provider
         ? async () => {
             try {

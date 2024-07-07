@@ -5,7 +5,7 @@ import { useWeb3 } from "@components/providers";
 
 export default function Nav() {
   const [isOpen, setIsOpen] = useState(false);
-  const { connect } = useWeb3();
+  const { connect, requireInstall } = useWeb3();
 
   return (
     <section>
@@ -39,12 +39,21 @@ export default function Nav() {
               >
                 Wishlist
               </Link>
-              <span
-                onClick={connect}
-                className="px-8 py-3 border rounded-md text-base font-medium text-white bg-indigo-600 hover:bg-indigo-700"
-              >
-                Connect
-              </span>
+              {requireInstall ? (
+                <span
+                  onClick={connect}
+                  className="px-8 py-3 border rounded-md text-base font-medium text-white bg-yellow-600 hover:bg-yellow-700"
+                >
+                  Install MetaMask
+                </span>
+              ) : (
+                <span
+                  onClick={connect}
+                  className="px-8 py-3 border rounded-md text-base font-medium text-white bg-indigo-600 hover:bg-indigo-700"
+                >
+                  Connect
+                </span>
+              )}
             </div>
             <div className="md:hidden">
               <button
@@ -96,12 +105,21 @@ export default function Nav() {
               >
                 Wishlist
               </Link>
-              <span
-                onClick={connect}
-                className="font-medium mr-8 text-indigo-600 hover:text-indigo-500"
-              >
-                Connect
-              </span>
+              {requireInstall ? (
+                <span
+                  onClick={connect}
+                  className="font-medium mr-8 text-gray-500 hover:text-gray-900"
+                >
+                  Install MetaMask
+                </span>
+              ) : (
+                <span
+                  onClick={connect}
+                  className="font-medium mr-8 text-gray-500 hover:text-gray-900"
+                >
+                  Connect
+                </span>
+              )}
             </div>
           )}
         </nav>
