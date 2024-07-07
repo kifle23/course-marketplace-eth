@@ -4,6 +4,7 @@ import {
   ReactNode,
   useContext,
   useEffect,
+  useMemo,
   useState,
 } from "react";
 import detectEthereumProvider from "@metamask/detect-provider";
@@ -14,6 +15,7 @@ interface Web3State {
   provider: any;
   contract: any;
   isLoading: boolean;
+  connect?: () => void;
 }
 interface Web3ProviderProps {
   children: ReactNode;
@@ -68,8 +70,27 @@ export default function Web3Provider({ children }: Web3ProviderProps) {
     loadProvider();
   }, []);
 
+  const _web3Api = useMemo(() => {
+    const { provider } = web3Api;
+    return {
+      ...web3Api,
+      connect: provider
+        ? async () => {
+            try {
+              await provider.request({ method: "eth_requestAccounts" });
+            } catch {
+              location.reload();
+            }
+          }
+        : () =>
+            console.error(
+              "Cannot connect to Metamask, try to reload your browser please."
+            ),
+    };
+  }, [web3Api]);
+
   return (
-    <Web3Context.Provider value={web3Api}>{children}</Web3Context.Provider>
+    <Web3Context.Provider value={_web3Api}>{children}</Web3Context.Provider>
   );
 }
 

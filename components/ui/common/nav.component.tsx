@@ -1,9 +1,11 @@
 "use client";
 import { useState } from "react";
 import Link from "next/link";
+import { useWeb3 } from "@components/providers";
 
 export default function Nav() {
   const [isOpen, setIsOpen] = useState(false);
+  const { connect } = useWeb3();
 
   return (
     <section>
@@ -37,12 +39,12 @@ export default function Nav() {
               >
                 Wishlist
               </Link>
-              <Link
-                href="/login"
+              <span
+                onClick={connect}
                 className="px-8 py-3 border rounded-md text-base font-medium text-white bg-indigo-600 hover:bg-indigo-700"
               >
                 Connect
-              </Link>
+              </span>
             </div>
             <div className="md:hidden">
               <button
@@ -94,12 +96,12 @@ export default function Nav() {
               >
                 Wishlist
               </Link>
-              <Link
-                href="/login"
+              <span
+                onClick={connect}
                 className="font-medium mr-8 text-indigo-600 hover:text-indigo-500"
               >
                 Connect
-              </Link>
+              </span>
             </div>
           )}
         </nav>
