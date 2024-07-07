@@ -69,6 +69,7 @@ export default function Hero({ title, description, image }: HeroProps) {
              (max-width: 768px) 100vw,
              (max-width: 1024px) 100vw,
              100vw"
+              priority
             />
           </div>
         </div>

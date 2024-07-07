@@ -39,9 +39,9 @@ export default function Nav() {
               </Link>
               <Link
                 href="/login"
-                className="font-medium mr-8 text-indigo-600 hover:text-indigo-500"
+                className="px-8 py-3 border rounded-md text-base font-medium text-white bg-indigo-600 hover:bg-indigo-700"
               >
-                Log in
+                Connect
               </Link>
             </div>
             <div className="md:hidden">
@@ -96,9 +96,9 @@ export default function Nav() {
               </Link>
               <Link
                 href="/login"
-                className="px-8 py-3 border rounded-md text-base font-medium text-white bg-indigo-600 hover:bg-indigo-700 md:py-4 md:text-lg md:px-10"
+                className="font-medium mr-8 text-indigo-600 hover:text-indigo-500"
               >
-                Connect Wallet
+                Connect
               </Link>
             </div>
           )}
