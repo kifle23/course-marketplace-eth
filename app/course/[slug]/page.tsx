@@ -1,7 +1,6 @@
 import { Modal, NotFound } from "@components/ui/common";
 import { Curriculum, CourseHero, KeyPoints } from "@components/ui/course";
 import { getAllCourses, getCourseBySlug } from "@content/courses/fetcher";
-import { Course } from "@content/courses/types";
 
 interface CoursePageProps {
   params: {

@@ -2,10 +2,11 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useWeb3 } from "@components/providers";
+import { Button } from "@components/ui/common";
 
 export default function Nav() {
   const [isOpen, setIsOpen] = useState(false);
-  const { connect, requireInstall } = useWeb3();
+  const { connect, isLoading, isWeb3Loaded } = useWeb3();
 
   return (
     <section>
@@ -39,20 +40,21 @@ export default function Nav() {
               >
                 Wishlist
               </Link>
-              {requireInstall ? (
-                <span
-                  onClick={connect}
-                  className="px-8 py-3 border rounded-md text-base font-medium text-white bg-yellow-600 hover:bg-yellow-700"
+              {isLoading ? (
+                <Button disabled={true} onClick={connect}>
+                  Loading
+                </Button>
+              ) : isWeb3Loaded ? (
+                <Button onClick={connect}>Connect</Button>
+              ) : (
+                <Button
+                  onClick={() =>
+                    window.open("https://metamask.io/download.html", "_blank")
+                  }
+                  className="text-white bg-yellow-600 hover:bg-yellow-700"
                 >
                   Install MetaMask
-                </span>
-              ) : (
-                <span
-                  onClick={connect}
-                  className="px-8 py-3 border rounded-md text-base font-medium text-white bg-indigo-600 hover:bg-indigo-700"
-                >
-                  Connect
-                </span>
+                </Button>
               )}
             </div>
             <div className="md:hidden">
@@ -105,19 +107,25 @@ export default function Nav() {
               >
                 Wishlist
               </Link>
-              {requireInstall ? (
-                <span
-                  onClick={connect}
-                  className="font-medium mr-8 text-gray-500 hover:text-gray-900"
-                >
-                  Install MetaMask
+              {isLoading ? (
+                <span className="font-medium mr-8 text-gray-500 hover:text-gray-900">
+                  Loading
                 </span>
-              ) : (
+              ) : isWeb3Loaded ? (
                 <span
                   onClick={connect}
                   className="font-medium mr-8 text-gray-500 hover:text-gray-900"
                 >
                   Connect
+                </span>
+              ) : (
+                <span
+                  onClick={() =>
+                    window.open("https://metamask.io/download.html", "_blank")
+                  }
+                  className="font-medium mr-8 text-gray-500 hover:text-gray-900"
+                >
+                  Install MetaMask
                 </span>
               )}
             </div>
