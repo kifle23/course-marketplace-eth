@@ -9,7 +9,7 @@ import {
 } from "react";
 import detectEthereumProvider from "@metamask/detect-provider";
 import Web3 from "web3";
-import { SetupHooks } from "./hooks/setupHooks";
+import { SetupHooks } from "./web3/hooks/setupHooks";
 
 interface Web3State {
   web3: Web3 | null;

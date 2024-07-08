@@ -116,12 +116,18 @@ export default function Nav() {
                   Loading
                 </span>
               ) : isWeb3Loaded ? (
-                <span
-                  onClick={connect}
-                  className="font-medium mr-8 text-gray-500 hover:text-gray-900"
-                >
-                  Connect
-                </span>
+                account ? (
+                  <span className="font-medium mr-8 text-gray-500 hover:text-gray-900">
+                    Hi There
+                  </span>
+                ) : (
+                  <span
+                    onClick={connect}
+                    className="font-medium mr-8 text-gray-500 hover:text-gray-900"
+                  >
+                    Connect
+                  </span>
+                )
               ) : (
                 <span
                   onClick={() =>
@@ -136,8 +142,8 @@ export default function Nav() {
           )}
         </nav>
       </div>
-      {account && (
-        <div className="flex justify-end pt-1 sm:px-6 lg:px-8">
+      {!isOpen && account && (
+        <div className="hidden sm:flex justify-end pt-1 sm:px-6 lg:px-8">
           <div className="text-white bg-indigo-600 rounded-md p-2">
             {account}
           </div>
