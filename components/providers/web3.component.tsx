@@ -9,7 +9,7 @@ import {
 } from "react";
 import detectEthereumProvider from "@metamask/detect-provider";
 import Web3 from "web3";
-import { SetupHooks } from "./hooks/setupHooks";
+import { SetupHooks } from "./web3/hooks/setupHooks";
 
 interface Web3State {
   web3: Web3 | null;
@@ -25,6 +25,8 @@ interface Web3ProviderProps {
 }
 interface Account {
   account: string;
+  isAdmin: boolean;
+  mutate: () => void;
 }
 
 const Web3Context = createContext<Web3State | undefined>(undefined);
@@ -42,7 +44,7 @@ const createWeb3State = ({
     contract: contract || null,
     isLoading: isLoading ?? true,
     isWeb3Loaded: isWeb3Loaded ?? false,
-    getHooks: () => SetupHooks({ web3: web3 || null }),
+    getHooks: () => SetupHooks({ web3: web3 || null, provider: provider }),
   };
 };
 
@@ -89,7 +91,7 @@ export default function Web3Provider({ children }: Web3ProviderProps) {
     const { provider, web3 } = web3Api;
     return {
       ...web3Api,
-      getHooks: () => SetupHooks({ web3: web3 }),
+      getHooks: () => SetupHooks({ web3: web3, provider: provider }),
       connect: provider
         ? async () => {
             try {

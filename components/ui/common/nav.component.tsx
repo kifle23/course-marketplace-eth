@@ -3,16 +3,17 @@ import { useState } from "react";
 import Link from "next/link";
 import { useWeb3 } from "@components/providers";
 import { Button } from "@components/ui/common";
-import { useAccount } from '@components/web3/hooks/useAccount';
+import { useAccount } from "@components/hooks/web3/useAccount";
+import { usePathname } from "next/navigation";
 
 export default function Nav() {
   const [isOpen, setIsOpen] = useState(false);
   const { connect, isLoading, isWeb3Loaded } = useWeb3();
-  const { account } = useAccount();
+  const { account, isAdmin } = useAccount();
+  const pathname = usePathname();
 
   return (
     <section>
-      {account}
       <div className="relative pt-6 px-4 sm:px-6 lg:px-8">
         <nav className="relative" aria-label="Global">
           <div className="flex justify-between items-center">
@@ -44,17 +45,21 @@ export default function Nav() {
                 Wishlist
               </Link>
               {isLoading ? (
-                <Button disabled={true} onClick={connect}>
-                  Loading
-                </Button>
+                <Button disabled={true}>Loading</Button>
               ) : isWeb3Loaded ? (
-                <Button onClick={connect}>Connect</Button>
+                account ? (
+                  <Button hoverable={false}>
+                    Hi there {isAdmin && "Admin"}
+                  </Button>
+                ) : (
+                  <Button onClick={connect}>Connect</Button>
+                )
               ) : (
                 <Button
                   onClick={() =>
                     window.open("https://metamask.io/download.html", "_blank")
                   }
-                  className="text-white bg-yellow-600 hover:bg-yellow-700"
+                  variant="secondary"
                 >
                   Install MetaMask
                 </Button>
@@ -115,12 +120,18 @@ export default function Nav() {
                   Loading
                 </span>
               ) : isWeb3Loaded ? (
-                <span
-                  onClick={connect}
-                  className="font-medium mr-8 text-gray-500 hover:text-gray-900"
-                >
-                  Connect
-                </span>
+                account ? (
+                  <span className="font-medium mr-8 text-gray-500 hover:text-gray-900">
+                    Hi There {isAdmin && "Admin"}
+                  </span>
+                ) : (
+                  <span
+                    onClick={connect}
+                    className="font-medium mr-8 text-gray-500 hover:text-gray-900"
+                  >
+                    Connect
+                  </span>
+                )
               ) : (
                 <span
                   onClick={() =>
@@ -135,6 +146,13 @@ export default function Nav() {
           )}
         </nav>
       </div>
+      {!isOpen && account && !pathname.includes("/marketplace") && (
+        <div className="hidden sm:flex justify-end pt-1 sm:px-6 lg:px-8">
+          <div className="text-white bg-indigo-600 rounded-md p-2">
+            {account}
+          </div>
+        </div>
+      )}
     </section>
   );
 }
