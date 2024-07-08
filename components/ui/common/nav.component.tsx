@@ -3,7 +3,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { useWeb3 } from "@components/providers";
 import { Button } from "@components/ui/common";
-import { useAccount } from "@components/web3/hooks/useAccount";
+import { useAccount } from "@components/hooks/web3/useAccount";
 
 export default function Nav() {
   const [isOpen, setIsOpen] = useState(false);
