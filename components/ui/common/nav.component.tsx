@@ -8,7 +8,7 @@ import { useAccount } from "@components/web3/hooks/useAccount";
 export default function Nav() {
   const [isOpen, setIsOpen] = useState(false);
   const { connect, isLoading, isWeb3Loaded } = useWeb3();
-  const { account } = useAccount();
+  const { account, isAdmin } = useAccount();
 
   return (
     <section>
@@ -46,7 +46,9 @@ export default function Nav() {
                 <Button disabled={true}>Loading</Button>
               ) : isWeb3Loaded ? (
                 account ? (
-                  <Button hoverable={false}>Hi there</Button>
+                  <Button hoverable={false}>
+                    Hi there {isAdmin && "Admin"}
+                  </Button>
                 ) : (
                   <Button onClick={connect}>Connect</Button>
                 )
@@ -118,7 +120,7 @@ export default function Nav() {
               ) : isWeb3Loaded ? (
                 account ? (
                   <span className="font-medium mr-8 text-gray-500 hover:text-gray-900">
-                    Hi There
+                    Hi There {isAdmin && "Admin"}
                   </span>
                 ) : (
                   <span

@@ -25,6 +25,8 @@ interface Web3ProviderProps {
 }
 interface Account {
   account: string;
+  isAdmin: boolean;
+  mutate: () => void;
 }
 
 const Web3Context = createContext<Web3State | undefined>(undefined);

@@ -9,10 +9,17 @@ interface UseAccountProps {
 
 interface Account {
   account: string;
+  isAdmin: boolean;
+  mutate: () => void;
 }
 
+const adminAddresses: { [key: string]: boolean } = {
+  "0x9ec9defa6a6986c63d380f2dd4f2c24892fa86fdef7d9a27a1cac7767480c051": true,
+  "0x9345724d971d791dc155f3b85a13c50bbd1774b604e385808470082ca55940c0": true,
+};
+
 export const AccountHandler = ({ web3, provider }: UseAccountProps) => {
-  const { data, mutate } = useSWR(
+  const { data, mutate, ...rest } = useSWR(
     () => (web3 ? "web3/accounts" : null),
     async () => {
       if (web3) {
@@ -42,8 +49,14 @@ export const AccountHandler = ({ web3, provider }: UseAccountProps) => {
   }, [provider, mutate]);
 
   const getAccount = (): Account => {
-    return { account: data || "" };
+    return {
+      account: data ?? "",
+      isAdmin:
+        !!(data && web3 && adminAddresses[web3.utils.keccak256(data)]) ?? false,
+      mutate,
+      ...rest,
+    };
   };
 
-  return getAccount;
+  return getAccount();
 };
