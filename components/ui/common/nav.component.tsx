@@ -4,11 +4,13 @@ import Link from "next/link";
 import { useWeb3 } from "@components/providers";
 import { Button } from "@components/ui/common";
 import { useAccount } from "@components/hooks/web3/useAccount";
+import { usePathname } from "next/navigation";
 
 export default function Nav() {
   const [isOpen, setIsOpen] = useState(false);
   const { connect, isLoading, isWeb3Loaded } = useWeb3();
   const { account, isAdmin } = useAccount();
+  const pathname = usePathname();
 
   return (
     <section>
@@ -144,7 +146,7 @@ export default function Nav() {
           )}
         </nav>
       </div>
-      {!isOpen && account && (
+      {!isOpen && account && !pathname.includes("/marketplace") && (
         <div className="hidden sm:flex justify-end pt-1 sm:px-6 lg:px-8">
           <div className="text-white bg-indigo-600 rounded-md p-2">
             {account}
