@@ -1,17 +1,15 @@
-import { Modal, NotFound } from "@components/common";
-import { Curriculum, CourseHero, KeyPoints } from "@components/course";
+import { Modal, NotFound } from "@components/ui/common";
+import { Curriculum, CourseHero, KeyPoints } from "@components/ui/course";
 import { getAllCourses, getCourseBySlug } from "@content/courses/fetcher";
-import { Course } from "@content/courses/types";
 
 interface CoursePageProps {
   params: {
     slug: string;
   };
-  course?: Course;
 }
 
-export default async function CoursePage({ params, course }: CoursePageProps) {
-  course = getCourseBySlug(params.slug) || undefined;
+export default async function CoursePage({ params }: CoursePageProps) {
+  const course = getCourseBySlug(params.slug) || undefined;
 
   if (!course) {
     return <NotFound />;
