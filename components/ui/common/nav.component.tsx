@@ -3,7 +3,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { useWeb3 } from "@components/providers";
 import { Button } from "@components/ui/common";
-import { useAccount } from '@components/web3/hooks/useAccount';
+import { useAccount } from "@components/web3/hooks/useAccount";
 
 export default function Nav() {
   const [isOpen, setIsOpen] = useState(false);
@@ -12,7 +12,6 @@ export default function Nav() {
 
   return (
     <section>
-      {account}
       <div className="relative pt-6 px-4 sm:px-6 lg:px-8">
         <nav className="relative" aria-label="Global">
           <div className="flex justify-between items-center">
@@ -44,17 +43,19 @@ export default function Nav() {
                 Wishlist
               </Link>
               {isLoading ? (
-                <Button disabled={true} onClick={connect}>
-                  Loading
-                </Button>
+                <Button disabled={true}>Loading</Button>
               ) : isWeb3Loaded ? (
-                <Button onClick={connect}>Connect</Button>
+                account ? (
+                  <Button hoverable={false}>Hi there</Button>
+                ) : (
+                  <Button onClick={connect}>Connect</Button>
+                )
               ) : (
                 <Button
                   onClick={() =>
                     window.open("https://metamask.io/download.html", "_blank")
                   }
-                  className="text-white bg-yellow-600 hover:bg-yellow-700"
+                  variant="secondary"
                 >
                   Install MetaMask
                 </Button>
