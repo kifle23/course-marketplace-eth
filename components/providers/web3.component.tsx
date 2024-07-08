@@ -18,10 +18,13 @@ interface Web3State {
   isLoading: boolean;
   connect?: () => void;
   isWeb3Loaded: boolean;
-  hooks: ReturnType<typeof SetupHooks>;
+  getHooks: () => ReturnType<typeof SetupHooks>;
 }
 interface Web3ProviderProps {
   children: ReactNode;
+}
+interface Account {
+  account: string;
 }
 
 const Web3Context = createContext<Web3State | undefined>(undefined);
@@ -39,7 +42,7 @@ const createWeb3State = ({
     contract: contract || null,
     isLoading: isLoading ?? true,
     isWeb3Loaded: isWeb3Loaded ?? false,
-    hooks: SetupHooks({ web3: web3 || null }),
+    getHooks: () => SetupHooks({ web3: web3 || null }),
   };
 };
 
@@ -86,7 +89,7 @@ export default function Web3Provider({ children }: Web3ProviderProps) {
     const { provider, web3 } = web3Api;
     return {
       ...web3Api,
-      hooks: SetupHooks({ web3: web3 }),
+      getHooks: () => SetupHooks({ web3: web3 }),
       connect: provider
         ? async () => {
             try {
@@ -114,4 +117,11 @@ export const useWeb3 = (): Web3State => {
   }
   return context;
 };
+
+export function useWeb3Hooks(
+  cb: (hooks: ReturnType<typeof SetupHooks>) => Account
+) {
+  const { getHooks } = useWeb3();
+  return cb(getHooks());
+}
 

@@ -8,7 +8,7 @@ interface Account {
   account: string;
 }
 
-export const useAccount = ({ web3 }: UseAccountProps) => {
+export const accountHandler = ({ web3 }: UseAccountProps) => {
     const getAccount = (): Account => {
         return { account: web3 ? "Test Account" : "null" };
     };
