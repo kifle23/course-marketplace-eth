@@ -3,7 +3,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { useWeb3 } from "@components/providers";
 import { Button } from "@components/ui/common";
-import { useAccount } from "@components/hooks/web3/useAccount";
+import { useAccount } from "@components/hooks/web3";
 import { usePathname } from "next/navigation";
 
 export default function Nav() {

@@ -18,16 +18,13 @@ interface UseNetworkProps {
   provider: any;
 }
 interface Network {
-  network: {
-    data: string;
-    target: string;
-    isSupported: boolean;
-    isInitialized: boolean;
-  };
+  data: string;
+  target: string;
+  isSupported: boolean;
 }
 
 const useNetworkSWR = (web3: Web3 | null) => {
-  const { data, error, ...rest } = useSWR(
+  const { data, ...rest } = useSWR(
     () => (web3 ? "web3/network" : null),
     async () => {
       if (!web3) throw new Error("Web3 is not provided");
@@ -41,36 +38,32 @@ const useNetworkSWR = (web3: Web3 | null) => {
     }
   );
 
-  return { data, error, ...rest };
+  return { data, ...rest };
 };
 
 export const NetworkHandler = ({
   web3,
   provider,
 }: UseNetworkProps): Network => {
-  const { data, error, mutate, ...rest } = useNetworkSWR(web3);
+  const { data, mutate, ...rest } = useNetworkSWR(web3);
 
   useEffect(() => {
     if (!provider) return;
 
-    const handleAccountsChanged = (accounts: string[]) =>
-      mutate(accounts[0] ?? null);
+    const handleChainChanged = (chainId: string) =>
+      mutate(NETWORKS[parseInt(chainId, 16)]);
 
-    provider.on("accountsChanged", handleAccountsChanged);
+    provider.on("chainChanged", handleChainChanged);
 
-    return () =>
-      provider.removeListener("accountsChanged", handleAccountsChanged);
+    return () => provider.removeListener("chainChanged", handleChainChanged);
   }, [provider, mutate]);
 
   const getNetwork = (): Network => {
     return {
-      network: {
-        data: data ?? "",
-        target: targetNetwork,
-        isSupported: data === targetNetwork,
-        isInitialized: !!data || !!error,
-        ...rest,
-      },
+      data: data ?? "",
+      target: targetNetwork,
+      isSupported: data === targetNetwork,
+      ...rest,
     };
   };
 
