@@ -28,7 +28,7 @@ export default function WalletBar() {
           </div>
           <div>
             <div>
-              {!network.isSupported && (
+              {network.isInitialized && !network.isSupported && (
                 <div className="bg-red-400 p-4 rounded-lg">
                   <div>Connected to wrong network</div>
                   <div>

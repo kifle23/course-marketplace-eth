@@ -5,6 +5,7 @@ interface Network {
     data: string;
     target: string;
     isSupported: boolean;
+    isInitialized: boolean;
   };
 }
 

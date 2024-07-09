@@ -22,11 +22,12 @@ interface Network {
     data: string;
     target: string;
     isSupported: boolean;
+    isInitialized: boolean;
   };
 }
 
 const useNetworkSWR = (web3: Web3 | null) => {
-  const { data, ...rest } = useSWR(
+  const { data, error, ...rest } = useSWR(
     () => (web3 ? "web3/network" : null),
     async () => {
       if (!web3) throw new Error("Web3 is not provided");
@@ -40,7 +41,7 @@ const useNetworkSWR = (web3: Web3 | null) => {
     }
   );
 
-  return { data, ...rest };
+  return { data, error, ...rest };
 };
 
 export const NetworkHandler = ({
@@ -67,6 +68,7 @@ export const NetworkHandler = ({
         data: data ?? "",
         target: targetNetwork,
         isSupported: data === targetNetwork,
+        isInitialized: !!data || !!error,
         ...rest,
       },
     };
