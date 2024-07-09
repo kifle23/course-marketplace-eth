@@ -34,6 +34,9 @@ export default function WalletBar() {
           </div>
         </div>
       </div>
+      &quot;Current Network&quot; {`${network.data}`}
+      &quot;Target Network&quot; {`${network.target}`}
+      &quot;Is Supported&quot; {`${network.isSupported}`}
     </section>
   );
 }

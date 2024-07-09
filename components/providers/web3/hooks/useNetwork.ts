@@ -10,6 +10,9 @@ const NETWORKS: { [key: number]: string } = {
   59144: "Linea Main Network",
   11155111: "Seapolia Test Network",
 };
+
+const targetNetwork =
+  NETWORKS[parseInt(process.env.NEXT_PUBLIC_TARGET_CHAIN_ID as string)];
 interface UseNetworkProps {
   web3: Web3 | null;
   provider: any;
@@ -17,11 +20,13 @@ interface UseNetworkProps {
 interface Network {
   network: {
     data: string;
+    target: string;
+    isSupported: boolean;
   };
 }
 
 const useNetworkSWR = (web3: Web3 | null) => {
-  const { data, error, ...rest } = useSWR(
+  const { data, ...rest } = useSWR(
     () => (web3 ? "web3/network" : null),
     async () => {
       if (!web3) throw new Error("Web3 is not provided");
@@ -42,7 +47,7 @@ export const NetworkHandler = ({
   web3,
   provider,
 }: UseNetworkProps): Network => {
-  const { data, mutate, ...rest } = useNetworkSWR(web3);
+  const { data, error, mutate, ...rest } = useNetworkSWR(web3);
 
   useEffect(() => {
     if (!provider) return;
@@ -60,6 +65,8 @@ export const NetworkHandler = ({
     return {
       network: {
         data: data ?? "",
+        target: targetNetwork,
+        isSupported: data === targetNetwork,
         ...rest,
       },
     };

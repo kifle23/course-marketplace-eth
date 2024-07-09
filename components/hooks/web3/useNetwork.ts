@@ -3,6 +3,8 @@ import { useWeb3Hooks } from "@components/providers/web3.component";
 interface Network {
   network: {
     data: string;
+    target: string;
+    isSupported: boolean;
   };
 }
 
