@@ -28,15 +28,25 @@ export default function WalletBar() {
           </div>
           <div>
             <div>
-              <span>Currently on </span>
-              <strong className="text-2xl"> {network.data}</strong>
+              {!network.isSupported && (
+                <div className="bg-red-400 p-4 rounded-lg">
+                  <div>Connected to wrong network</div>
+                  <div>
+                    Connect to: {` `}
+                    <strong className="text-2xl">{network.target}</strong>
+                  </div>
+                </div>
+              )}
+              {network.data && (
+                <div>
+                  <span>Currently on </span>
+                  <strong className="text-2xl">{network.data}</strong>
+                </div>
+              )}
             </div>
           </div>
         </div>
       </div>
-      &quot;Current Network&quot; {`${network.data}`}
-      &quot;Target Network&quot; {`${network.target}`}
-      &quot;Is Supported&quot; {`${network.isSupported}`}
     </section>
   );
 }
