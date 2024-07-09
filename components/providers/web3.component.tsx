@@ -17,8 +17,8 @@ interface Web3State {
   contract: any;
   isLoading: boolean;
   connect?: () => void;
-  isWeb3Loaded: boolean;
-  getHooks: () => ReturnType<typeof SetupHooks>;
+  hooks: () => ReturnType<typeof SetupHooks>;
+  requireInstall: boolean;
 }
 interface Web3ProviderProps {
   children: ReactNode;
@@ -36,15 +36,15 @@ const createWeb3State = ({
   provider,
   contract,
   isLoading,
-  isWeb3Loaded,
+  requireInstall,
 }: Partial<Web3State>): Web3State => {
   return {
     web3: web3 || null,
     provider: provider || null,
     contract: contract || null,
     isLoading: isLoading ?? true,
-    isWeb3Loaded: isWeb3Loaded ?? false,
-    getHooks: () => SetupHooks({ web3: web3 || null, provider: provider }),
+    hooks: () => SetupHooks({ web3: web3 || null, provider: provider }),
+    requireInstall: requireInstall ?? false,
   };
 };
 
@@ -55,7 +55,8 @@ export default function Web3Provider({ children }: Web3ProviderProps) {
       provider: null,
       contract: null,
       isLoading: true,
-      isWeb3Loaded: false,
+      hooks: () => SetupHooks({ web3: null, provider: null }),
+      requireInstall: false,
     })
   );
 
@@ -71,14 +72,13 @@ export default function Web3Provider({ children }: Web3ProviderProps) {
             provider,
             contract: null,
             isLoading: false,
-            isWeb3Loaded: web3 != null,
+            hooks: () => SetupHooks({ web3, provider }),
           })
         );
       } else {
         setWeb3Api((api) => ({
           ...api,
           isLoading: false,
-          isWeb3Loaded: false,
         }));
         console.error("Please, install Metamask.");
       }
@@ -88,10 +88,10 @@ export default function Web3Provider({ children }: Web3ProviderProps) {
   }, []);
 
   const _web3Api = useMemo(() => {
-    const { provider, web3 } = web3Api;
+    const { provider, web3, isLoading } = web3Api;
     return {
       ...web3Api,
-      getHooks: () => SetupHooks({ web3: web3, provider: provider }),
+      requireInstall: !isLoading && !web3,
       connect: provider
         ? async () => {
             try {
@@ -123,7 +123,7 @@ export const useWeb3 = (): Web3State => {
 export function useWeb3Hooks<T>(
   cb: (hooks: ReturnType<typeof SetupHooks>) => T
 ): T {
-  const { getHooks } = useWeb3();
-  return cb(getHooks());
+  const { hooks } = useWeb3();
+  return cb(hooks());
 }
 

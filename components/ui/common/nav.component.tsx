@@ -8,7 +8,7 @@ import { usePathname } from "next/navigation";
 
 export default function Nav() {
   const [isOpen, setIsOpen] = useState(false);
-  const { connect, isLoading, isWeb3Loaded } = useWeb3();
+  const { connect, isLoading, requireInstall } = useWeb3();
   const { account } = useAccount();
   const pathname = usePathname();
 
@@ -46,23 +46,22 @@ export default function Nav() {
               </Link>
               {isLoading ? (
                 <Button disabled={true}>Loading</Button>
-              ) : isWeb3Loaded ? (
-                account ? (
+              ) : account ? (
                   <Button hoverable={false}>
                     Hi there {account.isAdmin && "Admin"}
                   </Button>
-                ) : (
-                  <Button onClick={connect}>Connect</Button>
+                ) : requireInstall? (
+                  <Button
+                    onClick={() =>
+                      window.open("https://metamask.io/download.html", "_blank")
+                    }
+                    variant="secondary"
+                  >
+                    Install MetaMask
+                  </Button>
                 )
-              ) : (
-                <Button
-                  onClick={() =>
-                    window.open("https://metamask.io/download.html", "_blank")
-                  }
-                  variant="secondary"
-                >
-                  Install MetaMask
-                </Button>
+               : (
+                <Button onClick={connect}>Connect</Button>
               )}
             </div>
             <div className="md:hidden">
@@ -119,27 +118,27 @@ export default function Nav() {
                 <span className="font-medium mr-8 text-gray-500 hover:text-gray-900">
                   Loading
                 </span>
-              ) : isWeb3Loaded ? (
-                account ? (
+              ) : account ? (
+                
                   <span className="font-medium mr-8 text-gray-500 hover:text-gray-900">
                     Hi There {account.isAdmin && "Admin"}
                   </span>
-                ) : (
+                ) : requireInstall?(
                   <span
-                    onClick={connect}
+                    onClick={() =>
+                      window.open("https://metamask.io/download.html", "_blank")
+                    }
                     className="font-medium mr-8 text-gray-500 hover:text-gray-900"
                   >
-                    Connect
+                    Install MetaMask
                   </span>
                 )
-              ) : (
+               : (
                 <span
-                  onClick={() =>
-                    window.open("https://metamask.io/download.html", "_blank")
-                  }
+                  onClick={connect}
                   className="font-medium mr-8 text-gray-500 hover:text-gray-900"
                 >
-                  Install MetaMask
+                  Connect
                 </span>
               )}
             </div>
