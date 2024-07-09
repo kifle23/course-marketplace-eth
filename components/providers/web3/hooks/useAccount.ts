@@ -8,7 +8,7 @@ interface UseAccountProps {
 }
 
 interface Account {
-  account: string;
+  data: string;
   isAdmin: boolean;
   mutate: () => void;
 }
@@ -50,7 +50,7 @@ export const AccountHandler = ({ web3, provider }: UseAccountProps) => {
 
   const getAccount = (): Account => {
     return {
-      account: data ?? "",
+      data: data ?? "",
       isAdmin:
         !!(data && web3 && adminAddresses[web3.utils.keccak256(data)]) ?? false,
       mutate,

@@ -1,14 +1,17 @@
 "use client";
-import { useAccount } from "@components/hooks/web3/useAccount";
+import { useAccount, useNetwork } from "@components/hooks/web3";
+import { useWeb3 } from "@components/providers";
 
 export default function WalletBar() {
   const { account } = useAccount();
+  const { network } = useNetwork();
+  const { requireInstall } = useWeb3();
 
   return (
     <section className="text-white bg-indigo-600">
       <div className="p-8">
         <h1 className="text-2xl">
-          Hello, {account ? account : "Connect to your wallet"}
+          Hello, {account.data ? account.data : "Connect to your wallet"}
         </h1>
         <h2 className="subtitle mb-5 text-xl">
           I hope you are having a great day!
@@ -26,8 +29,26 @@ export default function WalletBar() {
           </div>
           <div>
             <div>
-              <span>Currently on </span>
-              <strong className="text-2xl">Ethereum Main Network</strong>
+              {network.isInitialized && !network.isSupported && (
+                <div className="bg-red-400 p-4 rounded-lg">
+                  <div>Connected to wrong network</div>
+                  <div>
+                    Connect to: {` `}
+                    <strong className="text-2xl">{network.target}</strong>
+                  </div>
+                </div>
+              )}
+              {requireInstall && (
+                <div className="bg-yellow-500 p-4 rounded-lg">
+                  Cannot connect to network. Please install Metamask.
+                </div>
+              )}
+              {network.data && (
+                <div>
+                  <span>Currently on </span>
+                  <strong className="text-2xl">{network.data}</strong>
+                </div>
+              )}
             </div>
           </div>
         </div>

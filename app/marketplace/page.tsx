@@ -4,12 +4,13 @@ import { getAllCourses } from "@content/courses/fetcher";
 
 export default function Marketplace() {
   const { data: courses } = getAllCourses();
+
   return (
     <>
       <div className="py-4">
-        <WalletBar/>
+        <WalletBar />
       </div>
-      <CourseList courses={courses} />
+      <CourseList courses={courses} useCustomCard={true} />
     </>
   );
 }
