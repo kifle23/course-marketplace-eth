@@ -8,9 +8,11 @@ interface UseAccountProps {
 }
 
 interface Account {
-  account: string;
-  isAdmin: boolean;
-  mutate: () => void;
+  account: {
+    data: string;
+    isAdmin: boolean;
+    mutate: () => void;
+  };
 }
 
 const adminAddresses: { [key: string]: boolean } = {
@@ -50,11 +52,14 @@ export const AccountHandler = ({ web3, provider }: UseAccountProps) => {
 
   const getAccount = (): Account => {
     return {
-      account: data ?? "",
-      isAdmin:
-        !!(data && web3 && adminAddresses[web3.utils.keccak256(data)]) ?? false,
-      mutate,
-      ...rest,
+      account: {
+        data: data ?? "",
+        isAdmin:
+          !!(data && web3 && adminAddresses[web3.utils.keccak256(data)]) ??
+          false,
+        mutate,
+        ...rest,
+      },
     };
   };
 

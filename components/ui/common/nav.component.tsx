@@ -9,7 +9,7 @@ import { usePathname } from "next/navigation";
 export default function Nav() {
   const [isOpen, setIsOpen] = useState(false);
   const { connect, isLoading, isWeb3Loaded } = useWeb3();
-  const { account, isAdmin } = useAccount();
+  const { account } = useAccount();
   const pathname = usePathname();
 
   return (
@@ -49,7 +49,7 @@ export default function Nav() {
               ) : isWeb3Loaded ? (
                 account ? (
                   <Button hoverable={false}>
-                    Hi there {isAdmin && "Admin"}
+                    Hi there {account.isAdmin && "Admin"}
                   </Button>
                 ) : (
                   <Button onClick={connect}>Connect</Button>
@@ -122,7 +122,7 @@ export default function Nav() {
               ) : isWeb3Loaded ? (
                 account ? (
                   <span className="font-medium mr-8 text-gray-500 hover:text-gray-900">
-                    Hi There {isAdmin && "Admin"}
+                    Hi There {account.isAdmin && "Admin"}
                   </span>
                 ) : (
                   <span
@@ -149,7 +149,7 @@ export default function Nav() {
       {!isOpen && account && !pathname.includes("/marketplace") && (
         <div className="hidden sm:flex justify-end pt-1 sm:px-6 lg:px-8">
           <div className="text-white bg-indigo-600 rounded-md p-2">
-            {account}
+            {account.data}
           </div>
         </div>
       )}

@@ -1,5 +1,6 @@
 import Web3 from "web3";
-import { AccountHandler as createUseAccount } from "./useAccount";
+import { AccountHandler as createAccountHook } from "./useAccount";
+import { NetworkHandler as createNetworkHook } from "./useNetwork";
 interface setupHooksProps {
   web3: Web3 | null;
   provider: any;
@@ -7,6 +8,7 @@ interface setupHooksProps {
 
 export const SetupHooks = ({ ...deps }: setupHooksProps) => {
   return {
-    useAccount: createUseAccount({ ...deps}),
+    useAccount: createAccountHook({ ...deps}),
+    useNetwork: createNetworkHook({ ...deps}),
   };
 };

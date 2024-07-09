@@ -1,9 +1,11 @@
 import { useWeb3Hooks } from "@components/providers/web3.component";
 
 interface Account {
-  account: string;
-  isAdmin: boolean;
-  mutate: () => void;
+  account: {
+    data: string;
+    isAdmin: boolean;
+    mutate: () => void;
+  }
 }
 
 export const useAccount = (): Account => {

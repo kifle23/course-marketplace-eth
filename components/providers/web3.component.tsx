@@ -120,9 +120,9 @@ export const useWeb3 = (): Web3State => {
   return context;
 };
 
-export function useWeb3Hooks(
-  cb: (hooks: ReturnType<typeof SetupHooks>) => Account
-) {
+export function useWeb3Hooks<T>(
+  cb: (hooks: ReturnType<typeof SetupHooks>) => T
+): T {
   const { getHooks } = useWeb3();
   return cb(getHooks());
 }

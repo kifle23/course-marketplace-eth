@@ -1,14 +1,16 @@
 "use client";
 import { useAccount } from "@components/hooks/web3/useAccount";
+import { useNetwork } from "@components/hooks/web3/useNetwork";
 
 export default function WalletBar() {
   const { account } = useAccount();
+  const { network } = useNetwork();
 
   return (
     <section className="text-white bg-indigo-600">
       <div className="p-8">
         <h1 className="text-2xl">
-          Hello, {account ? account : "Connect to your wallet"}
+          Hello, {account.data ? account.data : "Connect to your wallet"}
         </h1>
         <h2 className="subtitle mb-5 text-xl">
           I hope you are having a great day!
@@ -27,7 +29,7 @@ export default function WalletBar() {
           <div>
             <div>
               <span>Currently on </span>
-              <strong className="text-2xl">Ethereum Main Network</strong>
+              <strong className="text-2xl"> {network.data}</strong>
             </div>
           </div>
         </div>
