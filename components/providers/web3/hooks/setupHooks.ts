@@ -6,9 +6,9 @@ interface setupHooksProps {
   provider: any;
 }
 
-export const SetupHooks = ({ ...deps }: setupHooksProps) => {
+export const SetupHooks = ({ web3, provider }: setupHooksProps) => {
   return {
-    useAccount: createAccountHook({ ...deps}),
-    useNetwork: createNetworkHook({ ...deps}),
+    useAccount: createAccountHook({ web3, provider }),
+    useNetwork: createNetworkHook({ web3, provider }),
   };
 };
