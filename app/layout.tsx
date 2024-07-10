@@ -18,16 +18,18 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={inter.className}>
-        <Web3Provider>
-          <main className="bg-white overflow-hidden">
-            <div className="max-w-7xl mx-auto px-4">
+      <body className={`${inter.className} bg-white overflow-hidden`}>
+        <div className="max-w-7xl mx-auto px-4">
+          <Web3Provider>
+            <header>
               <Nav />
+            </header>
+            <main>
               <div className="fit">{children}</div>
-            </div>
-          </main>
-          <Footer />
-        </Web3Provider>
+            </main>
+          </Web3Provider>
+        </div>
+        <Footer />
       </body>
     </html>
   );
