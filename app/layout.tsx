@@ -18,8 +18,8 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${inter.className} bg-white overflow-hidden`}>
-        <div className="max-w-7xl mx-auto px-4">
+      <body className={`${inter.className} bg-white`}>
+        <div className="max-w-7xl mx-auto px-4  overflow-hidden">
           <Web3Provider>
             <header>
               <Nav />

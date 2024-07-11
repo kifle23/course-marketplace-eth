@@ -1,12 +1,14 @@
 import Image from "next/image";
 import { Course } from "@content/courses/types";
 import Link from "next/link";
+import { Button } from "@components/ui/common";
 
 interface CardProps {
   course: Course;
+  useCustomCard?: boolean;
 }
 
-export default function Card({ course }: CardProps) {
+export default function Card({ course, useCustomCard }: CardProps) {
   return (
     <div className="bg-white rounded-xl shadow-md overflow-hidden md:max-w-2xl">
       <div className="flex">
@@ -31,6 +33,11 @@ export default function Card({ course }: CardProps) {
             {course.title}
           </Link>
           <p className="mt-2 text-gray-500">{course.description}</p>
+          {useCustomCard && (
+            <div className="mt-4">
+              <Button variant="light">Purchase</Button>
+            </div>
+          )}
         </div>
       </div>
     </div>
