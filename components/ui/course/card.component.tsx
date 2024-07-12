@@ -1,7 +1,10 @@
+"use client";
 import Image from "next/image";
 import { Course } from "@content/courses/types";
 import Link from "next/link";
 import { Button } from "@components/ui/common";
+import { OrderModal } from "@components/ui/order";
+import { useState } from "react";
 
 interface CardProps {
   course: Course;
@@ -9,6 +12,7 @@ interface CardProps {
 }
 
 export default function Card({ course, useCustomCard }: CardProps) {
+  const [selectedCourse, setSelectedCourse] = useState<Course | null>(null);
   return (
     <div className="bg-white rounded-xl shadow-md overflow-hidden md:max-w-2xl">
       <div className="flex flex-col md:flex-row h-full">
@@ -38,9 +42,12 @@ export default function Card({ course, useCustomCard }: CardProps) {
           </div>
           {useCustomCard && (
             <div className="mt-4">
-              <Button variant="light">Purchase</Button>
+              <Button variant="light" onClick={() => setSelectedCourse(course)}>
+                Purchase
+              </Button>
             </div>
           )}
+          <OrderModal course={selectedCourse} onClose={()=>setSelectedCourse(null)} />
         </div>
       </div>
     </div>
