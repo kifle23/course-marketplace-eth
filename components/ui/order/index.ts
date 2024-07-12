@@ -1,1 +1,2 @@
-export { default as Card } from "./card.component";
+export { default as OrderCard } from "./card.component";
+export { default as OrderModal } from "./modal.component";

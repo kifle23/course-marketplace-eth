@@ -5,6 +5,7 @@ interface Account {
     data: string;
     isAdmin: boolean;
     mutate: () => void;
+    isInitialized: boolean;
   };
 }
 

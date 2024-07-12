@@ -46,21 +46,20 @@ export default function Nav() {
               </Link>
               {isLoading ? (
                 <Button disabled={true}>Loading</Button>
-              ) : account ? (
-                  <Button hoverable={false}>
-                    Hi there {account.isAdmin && "Admin"}
-                  </Button>
-                ) : requireInstall? (
-                  <Button
-                    onClick={() =>
-                      window.open("https://metamask.io/download.html", "_blank")
-                    }
-                    variant="secondary"
-                  >
-                    Install MetaMask
-                  </Button>
-                )
-               : (
+              ) : account.isInitialized ? (
+                <Button hoverable={false}>
+                  Hi there {account.isAdmin && "Admin"}
+                </Button>
+              ) : requireInstall ? (
+                <Button
+                  onClick={() =>
+                    window.open("https://metamask.io/download.html", "_blank")
+                  }
+                  variant="secondary"
+                >
+                  Install MetaMask
+                </Button>
+              ) : (
                 <Button onClick={connect}>Connect</Button>
               )}
             </div>
@@ -118,22 +117,20 @@ export default function Nav() {
                 <span className="font-medium mr-8 text-gray-500 hover:text-gray-900">
                   Loading
                 </span>
-              ) : account ? (
-                
-                  <span className="font-medium mr-8 text-gray-500 hover:text-gray-900">
-                    Hi There {account.isAdmin && "Admin"}
-                  </span>
-                ) : requireInstall?(
-                  <span
-                    onClick={() =>
-                      window.open("https://metamask.io/download.html", "_blank")
-                    }
-                    className="font-medium mr-8 text-gray-500 hover:text-gray-900"
-                  >
-                    Install MetaMask
-                  </span>
-                )
-               : (
+              ) : account.isInitialized ? (
+                <span className="font-medium mr-8 text-gray-500 hover:text-gray-900">
+                  Hi There {account.isAdmin && "Admin"}
+                </span>
+              ) : requireInstall ? (
+                <span
+                  onClick={() =>
+                    window.open("https://metamask.io/download.html", "_blank")
+                  }
+                  className="font-medium mr-8 text-gray-500 hover:text-gray-900"
+                >
+                  Install MetaMask
+                </span>
+              ) : (
                 <span
                   onClick={connect}
                   className="font-medium mr-8 text-gray-500 hover:text-gray-900"
@@ -145,13 +142,15 @@ export default function Nav() {
           )}
         </nav>
       </div>
-      {!isOpen && account && !pathname.includes("/marketplace") && (
-        <div className="hidden sm:flex justify-end pt-1 sm:px-6 lg:px-8">
-          <div className="text-white bg-indigo-600 rounded-md p-2">
-            {account.data}
+      {!isOpen &&
+        account.isInitialized &&
+        !pathname.includes("/marketplace") && (
+          <div className="hidden sm:flex justify-end pt-1 sm:px-6 lg:px-8">
+            <div className="text-white bg-indigo-600 rounded-md p-2">
+              {account.data}
+            </div>
           </div>
-        </div>
-      )}
+        )}
     </section>
   );
 }
