@@ -1,3 +1,4 @@
+import { Modal } from "@components/ui/common";
 import { CourseList } from "@components/ui/course";
 import { WalletBar } from "@components/ui/web3";
 import { getAllCourses } from "@content/courses/fetcher";
@@ -11,6 +12,7 @@ export default function Marketplace() {
         <WalletBar />
       </div>
       <CourseList courses={courses} useCustomCard={true} />
+      <Modal isOpen={true} />
     </>
   );
 }
