@@ -1,4 +1,4 @@
-import { Modal, NotFound } from "@components/ui/common";
+import { NotFound } from "@components/ui/common";
 import { Curriculum, CourseHero, KeyPoints } from "@components/ui/course";
 import { getAllCourses, getCourseBySlug } from "@content/courses/fetcher";
 
@@ -26,7 +26,6 @@ export default async function CoursePage({ params }: CoursePageProps) {
       </div>
       <KeyPoints points={course.wsl} />
       <Curriculum locked={true} />
-      <Modal />
     </div>
   );
 }
