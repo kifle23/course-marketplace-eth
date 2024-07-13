@@ -16,7 +16,7 @@ export default function EthRates() {
       <div className="flex flex-1 items-stretch text-center">
         <div className="p-10 border drop-shadow rounded-md">
           <div>
-            <span className="text-2xl font-bold">0.004769 = 15$</span>
+            <span className="text-2xl font-bold">{eth.perItem} = 15$</span>
           </div>
           <p className="text-xl text-gray-500">Price per course</p>
         </div>
