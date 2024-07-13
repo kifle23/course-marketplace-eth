@@ -1,5 +1,5 @@
 import { CourseList } from "@components/ui/course";
-import { WalletBar } from "@components/ui/web3";
+import { EthRates, WalletBar } from "@components/ui/web3";
 import { getAllCourses } from "@content/courses/fetcher";
 
 export default function Marketplace() {
@@ -9,6 +9,7 @@ export default function Marketplace() {
     <>
       <div className="py-4">
         <WalletBar />
+        <EthRates />
       </div>
       <CourseList courses={courses} useCustomCard={true} />
     </>
