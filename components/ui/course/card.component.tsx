@@ -5,7 +5,7 @@ import Link from "next/link";
 import { Button } from "@components/ui/common";
 import { OrderModal } from "@components/ui/order";
 import { useState } from "react";
-import { useAccount, useNetwork } from "@components/hooks/web3";
+import { useWalletInfo } from "@components/hooks/web3";
 
 interface CardProps {
   course: Course;
@@ -14,10 +14,7 @@ interface CardProps {
 
 export default function Card({ course, useCustomCard }: CardProps) {
   const [selectedCourse, setSelectedCourse] = useState<Course | null>(null);
-  const { account } = useAccount();
-  const { network } = useNetwork();
-
-  const canPurchase = !!(account.data && network.isSupported);
+  const { canPurchase } = useWalletInfo();
 
   return (
     <div className="bg-white rounded-xl shadow-md overflow-hidden md:max-w-2xl">

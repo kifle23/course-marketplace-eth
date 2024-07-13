@@ -28,6 +28,17 @@ export const useNetwork = (): Network => {
   return { network: swrRes };
 };
 
+export const useWalletInfo = () => {
+  const { account } = useAccount();
+  const { network } = useNetwork();
+
+  return {
+    account,
+    network,
+    canPurchase:!!(account.data && network.isSupported),
+  };
+};
+
 type Data = null | string | any[] | object;
 
 const _isEmpty = (data: Data): boolean => {
