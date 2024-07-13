@@ -1,8 +1,7 @@
 "use client";
 import { useState } from "react";
-import Link from "next/link";
 import { useWeb3 } from "@components/providers";
-import { Button } from "@components/ui/common";
+import { ActiveLink, Button } from "@components/ui/common";
 import { useAccount } from "@components/hooks/web3";
 import { usePathname } from "next/navigation";
 
@@ -18,32 +17,28 @@ export default function Nav() {
         <nav className="relative" aria-label="Global">
           <div className="flex justify-between items-center">
             <div className="hidden sm:flex items-center">
-              <Link
-                href="/"
-                className="font-medium mr-8 text-gray-500 hover:text-gray-900"
-              >
-                Home
-              </Link>
-              <Link
-                href="/marketplace"
-                className="font-medium mr-8 text-gray-500 hover:text-gray-900"
-              >
-                Marketplace
-              </Link>
-              <Link
-                href="/blogs"
-                className="font-medium mr-8 text-gray-500 hover:text-gray-900"
-              >
-                Blogs
-              </Link>
+              <ActiveLink href="/">
+                <span className="font-medium mr-8 text-gray-500 hover:text-gray-900">
+                  Home
+                </span>
+              </ActiveLink>
+              <ActiveLink href="/marketplace">
+                <span className="font-medium mr-8 text-gray-500 hover:text-gray-900">
+                  Marketplace
+                </span>
+              </ActiveLink>
+              <ActiveLink href="/blogs">
+                <span className="font-medium mr-8 text-gray-500 hover:text-gray-900">
+                  Blogs
+                </span>
+              </ActiveLink>
             </div>
             <div className="hidden md:flex items-center">
-              <Link
-                href="/wishlist"
-                className="font-medium mr-8 text-gray-500 hover:text-gray-900"
-              >
-                Wishlist
-              </Link>
+              <ActiveLink href="/wishlist">
+                <span className="font-medium mr-8 text-gray-500 hover:text-gray-900">
+                  Wishlist
+                </span>
+              </ActiveLink>
               {isLoading ? (
                 <Button disabled={true}>Loading</Button>
               ) : account.isInitialized ? (
@@ -89,30 +84,26 @@ export default function Nav() {
           </div>
           {isOpen && (
             <div className="md:hidden mt-4">
-              <Link
-                href="/"
-                className="block font-medium mb-4 text-gray-500 hover:text-gray-900"
-              >
-                Home
-              </Link>
-              <Link
-                href="/marketplace"
-                className="block font-medium mb-4 text-gray-500 hover:text-gray-900"
-              >
-                Marketplace
-              </Link>
-              <Link
-                href="/blogs"
-                className="block font-medium mb-4 text-gray-500 hover:text-gray-900"
-              >
-                Blogs
-              </Link>
-              <Link
-                href="/wishlist"
-                className="block font-medium mb-4 text-gray-500 hover:text-gray-900"
-              >
-                Wishlist
-              </Link>
+              <ActiveLink href="/">
+                <span className="block font-medium mb-4 text-gray-500 hover:text-gray-900">
+                  Home
+                </span>
+              </ActiveLink>
+              <ActiveLink href="/marketplace">
+                <span className="block font-medium mb-4 text-gray-500 hover:text-gray-900">
+                  Marketplace
+                </span>
+              </ActiveLink>
+              <ActiveLink href="/blogs">
+                <span className="block font-medium mb-4 text-gray-500 hover:text-gray-900">
+                  Blogs
+                </span>
+              </ActiveLink>
+              <ActiveLink href="/wishlist">
+                <span className="block font-medium mb-4 text-gray-500 hover:text-gray-900">
+                  Wishlist
+                </span>
+              </ActiveLink>
               {isLoading ? (
                 <span className="font-medium mr-8 text-gray-500 hover:text-gray-900">
                   Loading

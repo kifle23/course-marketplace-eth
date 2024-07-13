@@ -1,10 +1,9 @@
 "use client";
-import { useAccount, useNetwork } from "@components/hooks/web3";
+import { useWalletInfo } from "@components/hooks/web3";
 import { useWeb3 } from "@components/providers";
 
 export default function WalletBar() {
-  const { account } = useAccount();
-  const { network } = useNetwork();
+  const { account, network } = useWalletInfo();
   const { requireInstall } = useWeb3();
 
   return (

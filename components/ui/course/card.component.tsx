@@ -5,6 +5,7 @@ import Link from "next/link";
 import { Button } from "@components/ui/common";
 import { OrderModal } from "@components/ui/order";
 import { useState } from "react";
+import { useWalletInfo } from "@components/hooks/web3";
 
 interface CardProps {
   course: Course;
@@ -13,12 +14,16 @@ interface CardProps {
 
 export default function Card({ course, useCustomCard }: CardProps) {
   const [selectedCourse, setSelectedCourse] = useState<Course | null>(null);
+  const { canPurchase } = useWalletInfo();
+
   return (
     <div className="bg-white rounded-xl shadow-md overflow-hidden md:max-w-2xl">
       <div className="flex flex-col md:flex-row h-full">
         <div className="flex-1 relative w-full md:w-[50%] h-auto md:h-full">
           <Image
-            className="object-cover h-full w-full"
+            className={`object-cover h-full w-full ${
+              !canPurchase && "filter grayscale"
+            }`}
             src={course.coverImage}
             alt={course.title}
             priority
@@ -42,12 +47,19 @@ export default function Card({ course, useCustomCard }: CardProps) {
           </div>
           {useCustomCard && (
             <div className="mt-4">
-              <Button variant="light" onClick={() => setSelectedCourse(course)}>
+              <Button
+                variant="light"
+                disabled={!canPurchase}
+                onClick={() => setSelectedCourse(course)}
+              >
                 Purchase
               </Button>
             </div>
           )}
-          <OrderModal course={selectedCourse} onClose={()=>setSelectedCourse(null)} />
+          <OrderModal
+            course={selectedCourse}
+            onClose={() => setSelectedCourse(null)}
+          />
         </div>
       </div>
     </div>
