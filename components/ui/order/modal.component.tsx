@@ -2,18 +2,43 @@
 import { useEthPrice } from "@components/hooks/useEthPrice";
 import { Button, Modal } from "@components/ui/common";
 import { Course } from "@content/courses/types";
+import { create } from "domain";
 import { useEffect, useState } from "react";
 
 interface OrderModalProps {
   course: Course | null;
   onClose: () => void;
 }
+interface Order {
+  price: string;
+  email: string;
+  confirmationEmail: string;
+}
+interface FormState {
+  isDisabled: boolean;
+  message: string;
+}
 
-const defaultOrder = {
+const defaultOrder: Order = {
   price: "",
   email: "",
   confirmationEmail: "",
 };
+
+const _createFormState = (
+  isDisabled: boolean = false,
+  message: string = ""
+): FormState => ({ isDisabled, message });
+
+function createFormState({ price, email, confirmationEmail }: Order) {
+  if (!price || Number(price) <= 0) {
+    return _createFormState(true, "Price is not valid.");
+  }
+  if (email !== confirmationEmail) {
+    return _createFormState(true, "Emails do not match");
+  }
+  return _createFormState();
+}
 
 export default function OrderModal({ course, onClose }: OrderModalProps) {
   const [isOpen, setIsOpen] = useState(false);
@@ -36,6 +61,8 @@ export default function OrderModal({ course, onClose }: OrderModalProps) {
     setOrder(defaultOrder);
     onClose();
   };
+
+  const formState = createFormState(order);
 
   return (
     <Modal isOpen={isOpen}>
@@ -138,11 +165,17 @@ export default function OrderModal({ course, onClose }: OrderModalProps) {
                   correct
                 </span>
               </div>
+              {formState.message && (
+                <div className="p-4 my-3 text-sm text-red-700 bg-red-200 rounded-lg">
+                  {formState.message}
+                </div>
+              )}
             </div>
           </div>
         </div>
         <div className="bg-gray-50 px-4 py-3 sm:px-6 sm:flex">
           <Button
+            disabled={formState.isDisabled}
             onClick={() => {
               alert(JSON.stringify(order));
             }}
