@@ -8,6 +8,7 @@ import { useEffect, useState } from "react";
 interface OrderModalProps {
   course: Course | null;
   onClose: () => void;
+  onSubmit: (order: Order) => void;
 }
 interface Order {
   price: string;
@@ -30,20 +31,30 @@ const _createFormState = (
   message: string = ""
 ): FormState => ({ isDisabled, message });
 
-function createFormState({ price, email, confirmationEmail }: Order) {
+function createFormState(
+  { price, email, confirmationEmail }: Order,
+  hasAgreedTOS: boolean
+): FormState {
   if (!price || Number(price) <= 0) {
     return _createFormState(true, "Price is not valid.");
   }
   if (email !== confirmationEmail) {
     return _createFormState(true, "Emails do not match");
   }
+  if (!hasAgreedTOS) {
+    return _createFormState(
+      true,
+      "You need to agree with terms of service in order to submit the form"
+    );
+  }
   return _createFormState();
 }
 
-export default function OrderModal({ course, onClose }: OrderModalProps) {
+export default function OrderModal({ course, onClose, onSubmit }: OrderModalProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [order, setOrder] = useState(defaultOrder);
   const [enablePrice, setEnablePrice] = useState(false);
+  const [hasAgreedTOS, setHasAgreedTOS] = useState(false);
   const { eth } = useEthPrice();
 
   useEffect(() => {
@@ -59,10 +70,12 @@ export default function OrderModal({ course, onClose }: OrderModalProps) {
   const handleModalClose = () => {
     setIsOpen(false);
     setOrder(defaultOrder);
+    setEnablePrice(false);
+    setHasAgreedTOS(false);
     onClose();
   };
 
-  const formState = createFormState(order);
+  const formState = createFormState(order, hasAgreedTOS);
 
   return (
     <Modal isOpen={isOpen}>
@@ -157,7 +170,14 @@ export default function OrderModal({ course, onClose }: OrderModalProps) {
               </div>
               <div className="text-xs text-gray-700 flex">
                 <label className="flex items-center mr-2">
-                  <input type="checkbox" className="form-checkbox" />
+                  <input
+                    checked={hasAgreedTOS}
+                    onChange={({ target: { checked } }) => {
+                      setHasAgreedTOS(checked);
+                    }}
+                    type="checkbox"
+                    className="form-checkbox"
+                  />
                 </label>
                 <span>
                   I accept &apos;terms of service&apos; and I agree that my
@@ -177,7 +197,7 @@ export default function OrderModal({ course, onClose }: OrderModalProps) {
           <Button
             disabled={formState.isDisabled}
             onClick={() => {
-              alert(JSON.stringify(order));
+              onSubmit(order);
             }}
           >
             Submit
