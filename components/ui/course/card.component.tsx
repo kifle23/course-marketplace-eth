@@ -3,9 +3,9 @@ import Image from "next/image";
 import { Course } from "@content/courses/types";
 import Link from "next/link";
 import { Button } from "@components/ui/common";
-import { OrderModal } from "@components/ui/order";
 import { useState } from "react";
 import { useWalletInfo } from "@components/hooks/web3";
+import { OrderModal } from '@components/ui/order';
 
 interface CardProps {
   course: Course;

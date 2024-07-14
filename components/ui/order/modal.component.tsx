@@ -1,4 +1,5 @@
 "use client";
+import { useEthPrice } from "@components/hooks/useEthPrice";
 import { Button, Modal } from "@components/ui/common";
 import { Course } from "@content/courses/types";
 import { useEffect, useState } from "react";
@@ -8,17 +9,30 @@ interface OrderModalProps {
   onClose: () => void;
 }
 
+const defaultOrder = {
+  price: "",
+  email: "",
+  confirmationEmail: "",
+};
+
 export default function OrderModal({ course, onClose }: OrderModalProps) {
   const [isOpen, setIsOpen] = useState(false);
+  const [order, setOrder] = useState(defaultOrder);
+  const { eth } = useEthPrice();
 
   useEffect(() => {
     if (course) {
       setIsOpen(true);
+      setOrder({
+        ...defaultOrder,
+        price: eth.perItem ? eth.perItem.toString() : "",
+      });
     }
   }, [course]);
 
   const handleModalClose = () => {
     setIsOpen(false);
+    setOrder(defaultOrder);
     onClose();
   };
 
@@ -47,6 +61,12 @@ export default function OrderModal({ course, onClose }: OrderModalProps) {
                   </div>
                 </div>
                 <input
+                  value={order.price}
+                  onChange={({ target: { value } }) => {
+                    if (value.match(/^\d*\.?\d*$/)) {
+                      setOrder({ ...order, price: value });
+                    }
+                  }}
                   type="text"
                   name="price"
                   id="price"
