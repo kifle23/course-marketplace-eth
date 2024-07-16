@@ -3,18 +3,27 @@ import Image from "next/image";
 import { Course } from "@content/courses/types";
 import Link from "next/link";
 import { Button } from "@components/ui/common";
-import { OrderModal } from "@components/ui/order";
 import { useState } from "react";
 import { useWalletInfo } from "@components/hooks/web3";
+import { OrderModal } from '@components/ui/order';
 
 interface CardProps {
   course: Course;
   useCustomCard?: boolean;
 }
+interface Order {
+  price: string;
+  email: string;
+  confirmationEmail: string;
+}
 
 export default function Card({ course, useCustomCard }: CardProps) {
   const [selectedCourse, setSelectedCourse] = useState<Course | null>(null);
   const { canPurchase } = useWalletInfo();
+
+  const purchaseCourse = (order: Order) => {
+    alert(JSON.stringify(order));
+  }
 
   return (
     <div className="bg-white rounded-xl shadow-md overflow-hidden md:max-w-2xl">
@@ -58,6 +67,7 @@ export default function Card({ course, useCustomCard }: CardProps) {
           )}
           <OrderModal
             course={selectedCourse}
+            onSubmit={purchaseCourse}
             onClose={() => setSelectedCourse(null)}
           />
         </div>

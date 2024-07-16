@@ -1,33 +1,88 @@
 "use client";
+import { useEthPrice } from "@components/hooks/useEthPrice";
 import { Button, Modal } from "@components/ui/common";
 import { Course } from "@content/courses/types";
+import { create } from "domain";
 import { useEffect, useState } from "react";
 
 interface OrderModalProps {
   course: Course | null;
   onClose: () => void;
+  onSubmit: (order: Order) => void;
+}
+interface Order {
+  price: string;
+  email: string;
+  confirmationEmail: string;
+}
+interface FormState {
+  isDisabled: boolean;
+  message: string;
 }
 
-export default function OrderModal({ course, onClose }: OrderModalProps) {
+const defaultOrder: Order = {
+  price: "",
+  email: "",
+  confirmationEmail: "",
+};
+
+const _createFormState = (
+  isDisabled: boolean = false,
+  message: string = ""
+): FormState => ({ isDisabled, message });
+
+function createFormState(
+  { price, email, confirmationEmail }: Order,
+  hasAgreedTOS: boolean
+): FormState {
+  if (!price || Number(price) <= 0) {
+    return _createFormState(true, "Price is not valid.");
+  }
+  if (email !== confirmationEmail) {
+    return _createFormState(true, "Emails do not match");
+  }
+  if (!hasAgreedTOS) {
+    return _createFormState(
+      true,
+      "You need to agree with terms of service in order to submit the form"
+    );
+  }
+  return _createFormState();
+}
+
+export default function OrderModal({ course, onClose, onSubmit }: OrderModalProps) {
   const [isOpen, setIsOpen] = useState(false);
+  const [order, setOrder] = useState(defaultOrder);
+  const [enablePrice, setEnablePrice] = useState(false);
+  const [hasAgreedTOS, setHasAgreedTOS] = useState(false);
+  const { eth } = useEthPrice();
 
   useEffect(() => {
     if (course) {
       setIsOpen(true);
+      setOrder({
+        ...defaultOrder,
+        price: eth.perItem ? eth.perItem.toString() : "",
+      });
     }
   }, [course]);
 
   const handleModalClose = () => {
     setIsOpen(false);
+    setOrder(defaultOrder);
+    setEnablePrice(false);
+    setHasAgreedTOS(false);
     onClose();
   };
+
+  const formState = createFormState(order, hasAgreedTOS);
 
   return (
     <Modal isOpen={isOpen}>
       <div className="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
         <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
           <div className="sm:flex sm:items-start">
-            <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
+            <div className="mt-3 sm:mt-0 sm:ml-4 sm:text-left">
               <h3
                 className="mb-7 text-lg font-bold leading-6 text-gray-900"
                 id="modal-title"
@@ -39,7 +94,20 @@ export default function OrderModal({ course, onClose }: OrderModalProps) {
                   <label className="mb-2 font-bold">Price(eth)</label>
                   <div className="text-xs text-gray-700 flex">
                     <label className="flex items-center mr-2">
-                      <input type="checkbox" className="form-checkbox" />
+                      <input
+                        checked={enablePrice}
+                        onChange={({ target: { checked } }) => {
+                          setOrder({
+                            ...order,
+                            price: checked
+                              ? order.price
+                              : eth.perItem?.toString() || "",
+                          });
+                          setEnablePrice(checked);
+                        }}
+                        type="checkbox"
+                        className="form-checkbox"
+                      />
                     </label>
                     <span>
                       Adjust Price - only when the price is not correct
@@ -47,6 +115,13 @@ export default function OrderModal({ course, onClose }: OrderModalProps) {
                   </div>
                 </div>
                 <input
+                  disabled={!enablePrice}
+                  value={order.price}
+                  onChange={({ target: { value } }) => {
+                    if (value.match(/^\d*\.?\d*$/)) {
+                      setOrder({ ...order, price: value });
+                    }
+                  }}
                   type="text"
                   name="price"
                   id="price"
@@ -63,6 +138,9 @@ export default function OrderModal({ course, onClose }: OrderModalProps) {
                   <label className="mb-2 font-bold">Email</label>
                 </div>
                 <input
+                  onChange={({ target: { value } }) =>
+                    setOrder({ ...order, email: value.trim() })
+                  }
                   type="email"
                   name="email"
                   id="email"
@@ -80,6 +158,9 @@ export default function OrderModal({ course, onClose }: OrderModalProps) {
                   <label className="mb-2 font-bold">Repeat Email</label>
                 </div>
                 <input
+                  onChange={({ target: { value } }) =>
+                    setOrder({ ...order, confirmationEmail: value.trim() })
+                  }
                   type="email"
                   name="confirmationEmail"
                   id="confirmationEmail"
@@ -89,7 +170,14 @@ export default function OrderModal({ course, onClose }: OrderModalProps) {
               </div>
               <div className="text-xs text-gray-700 flex">
                 <label className="flex items-center mr-2">
-                  <input type="checkbox" className="form-checkbox" />
+                  <input
+                    checked={hasAgreedTOS}
+                    onChange={({ target: { checked } }) => {
+                      setHasAgreedTOS(checked);
+                    }}
+                    type="checkbox"
+                    className="form-checkbox"
+                  />
                 </label>
                 <span>
                   I accept &apos;terms of service&apos; and I agree that my
@@ -97,11 +185,23 @@ export default function OrderModal({ course, onClose }: OrderModalProps) {
                   correct
                 </span>
               </div>
+              {formState.message && (
+                <div className="p-4 my-3 text-sm text-red-700 bg-red-200 rounded-lg">
+                  {formState.message}
+                </div>
+              )}
             </div>
           </div>
         </div>
         <div className="bg-gray-50 px-4 py-3 sm:px-6 sm:flex">
-          <Button>Submit</Button>
+          <Button
+            disabled={formState.isDisabled}
+            onClick={() => {
+              onSubmit(order);
+            }}
+          >
+            Submit
+          </Button>
           <Button variant="danger" onClick={handleModalClose}>
             Cancel
           </Button>
