@@ -21,10 +21,17 @@
     "paths": {
       "@styles/*": ["styles/*"],
       "@components/*": ["components/*"],
-      "@content/*": ["content/*"]
+      "@content/*": ["content/*"],
+      "@utils/*": ["utils/*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "migrations/1_marketplace_migration.js"],
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    ".next/types/**/*.ts",
+    "migrations/1_marketplace_migration.js"
+  ],
   "exclude": ["node_modules"]
 }
 

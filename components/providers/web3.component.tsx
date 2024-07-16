@@ -10,11 +10,13 @@ import {
 import detectEthereumProvider from "@metamask/detect-provider";
 import Web3 from "web3";
 import { SetupHooks } from "./web3/hooks/setupHooks";
+import { loadContract, getProvider } from "@utils/load-contract";
+import { ethers } from "ethers";
 
 interface Web3State {
   web3: Web3 | null;
   provider: any;
-  contract: any;
+  contract: ethers.Contract | null;
   isLoading: boolean;
   connect?: () => void;
   hooks: () => ReturnType<typeof SetupHooks>;
@@ -27,6 +29,12 @@ interface Account {
   account: string;
   isAdmin: boolean;
   mutate: () => void;
+}
+
+declare global {
+  interface Window {
+    ethereum: any;
+  }
 }
 
 const Web3Context = createContext<Web3State | undefined>(undefined);
@@ -60,30 +68,39 @@ export default function Web3Provider({ children }: Web3ProviderProps) {
     })
   );
 
-  useEffect(() => {
-    const loadProvider = async () => {
-      const provider = (await detectEthereumProvider()) as any;
-      if (provider) {
-        const web3 = new Web3(provider);
+  const loadProvider = async () => {
+    const provider = (await detectEthereumProvider()) as any;
+    if (provider) {
+      const web3 = new Web3(provider);
+      const address = "0x5eDc2f424b4f116d7e7b5BeC707F97Da2c7113D1";
+      const ethProvider = getProvider();
+      const signer = await ethProvider.getSigner();
+      const contract = await loadContract(
+        provider,
+        "CourseMarketplace",
+        address,
+        signer
+      );
 
-        setWeb3Api(
-          createWeb3State({
-            web3,
-            provider,
-            contract: null,
-            isLoading: false,
-            hooks: () => SetupHooks({ web3, provider }),
-          })
-        );
-      } else {
-        setWeb3Api((api) => ({
-          ...api,
+      setWeb3Api(
+        createWeb3State({
+          web3,
+          provider,
+          contract: contract,
           isLoading: false,
-        }));
-        console.error("Please, install Metamask.");
-      }
-    };
+          hooks: () => SetupHooks({ web3, provider }),
+        })
+      );
+    } else {
+      setWeb3Api((api) => ({
+        ...api,
+        isLoading: false,
+      }));
+      console.error("Please, install Metamask.");
+    }
+  };
 
+  useEffect(() => {
     loadProvider();
   }, []);
 
