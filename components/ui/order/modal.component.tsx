@@ -2,7 +2,6 @@
 import { useEthPrice } from "@components/hooks/useEthPrice";
 import { Button, Modal } from "@components/ui/common";
 import { Course } from "@content/courses/types";
-import { create } from "domain";
 import { useEffect, useState } from "react";
 
 interface OrderModalProps {

@@ -1,24 +1,14 @@
-import { ethers } from "ethers";
+const NETWORK_ID = process.env.NEXT_PUBLIC_NETWORK_ID || "";
 
-export const getProvider = (): ethers.BrowserProvider => {
-  return new ethers.BrowserProvider(window.ethereum);
-};
-
-export const loadContract = async (
-  provider: any,
-  name: string,
-  address: string,
-  signer: ethers.Signer
-): Promise<ethers.Contract | null> => {
+export const loadContract = async (name: string, web3: any) => {
   try {
     const res = await fetch(`/contracts/${name}.json`);
     const artifact = await res.json();
 
-    if (address && artifact.abi && provider) {
-      const contract = new ethers.Contract(address, artifact.abi, provider);
-      return contract.connect(signer) as ethers.Contract;
-    }
-    return null;
+    return new web3.eth.Contract(
+      artifact.abi,
+      artifact.networks[NETWORK_ID].address
+    );
   } catch (error) {
     console.error("Failed to load contract:", error);
     return null;
