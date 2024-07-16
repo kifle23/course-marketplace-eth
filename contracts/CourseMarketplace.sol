@@ -22,6 +22,15 @@ contract CourseMarketplace {
     // mapping of courseID to courseHash
     mapping(uint => bytes32) private ownedCourseHash;
 
+    // number of all courses + id of the course
+    uint private totalOwnedCourses;
+
+    address payable private owner;
+
+    constructor() {
+        setContractOwner(msg.sender);
+    }
+
     /// Course has already a Owner!
     error CourseHasOwner();
 
@@ -62,5 +71,9 @@ contract CourseMarketplace {
         bytes32 courseHash
     ) private view returns (bool) {
         return ownedCourses[courseHash].owner == msg.sender;
+    }
+
+    function setContractOwner(address newOwner) private {
+        owner = payable(newOwner);
     }
 }
