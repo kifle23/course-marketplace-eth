@@ -7,4 +7,5 @@ export { default as NotFound } from "../../../app/not-found";
 export { default as Button } from "./button.component";
 export { default as ActiveLink } from "./link.component";
 export { default as Message } from "./message.component";
+export { default as Loader } from "./loader.component";
 
