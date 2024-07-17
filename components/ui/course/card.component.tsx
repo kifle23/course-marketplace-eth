@@ -5,7 +5,8 @@ import Link from "next/link";
 import { Button } from "@components/ui/common";
 import { useState } from "react";
 import { useWalletInfo } from "@components/hooks/web3";
-import { OrderModal } from '@components/ui/order';
+import { OrderModal } from "@components/ui/order";
+import { useWeb3 } from "@components/providers";
 
 interface CardProps {
   course: Course;
@@ -18,12 +19,24 @@ interface Order {
 }
 
 export default function Card({ course, useCustomCard }: CardProps) {
+  const { web3 } = useWeb3();
   const [selectedCourse, setSelectedCourse] = useState<Course | null>(null);
-  const { canPurchase } = useWalletInfo();
+  const { canPurchase, account } = useWalletInfo();
 
   const purchaseCourse = (order: Order) => {
-    alert(JSON.stringify(order));
-  }
+    if (selectedCourse) {
+      const hexCourseId = web3?.utils.utf8ToHex(selectedCourse.id);
+      const orderHash = web3?.utils.soliditySha3(
+        { type: "byte16", value: hexCourseId },
+        { type: "address", value: account.data }
+      );
+      const emailHash = web3?.utils.sha3(order.email);
+      const proof = web3?.utils.soliditySha3(
+        { type: "byte64", value: emailHash },
+        { type: "byte64", value: orderHash }
+      );
+    }
+  };
 
   return (
     <div className="bg-white rounded-xl shadow-md overflow-hidden md:max-w-2xl">

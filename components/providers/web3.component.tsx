@@ -15,7 +15,7 @@ import { loadContract } from "@utils/load-contract";
 interface Web3State {
   web3: Web3 | null;
   provider: any;
-  contract:  any;
+  contract: any;
   isLoading: boolean;
   connect?: () => void;
   hooks: () => ReturnType<typeof SetupHooks>;
@@ -66,7 +66,6 @@ export default function Web3Provider({ children }: Web3ProviderProps) {
     if (provider) {
       const web3 = new Web3(provider);
       const contract = await loadContract("CourseMarketplace", web3);
-      console.log("contract", contract);
 
       setWeb3Api(
         createWeb3State({
