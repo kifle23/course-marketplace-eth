@@ -52,7 +52,6 @@ contract CourseMarketplace {
         }
 
         uint id = totalOwnedCourses++;
-
         ownedCourseHash[id] = courseHash;
         ownedCourses[courseHash] = Course({
             id: id,

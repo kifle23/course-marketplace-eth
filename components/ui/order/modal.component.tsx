@@ -49,7 +49,11 @@ function createFormState(
   return _createFormState();
 }
 
-export default function OrderModal({ course, onClose, onSubmit }: OrderModalProps) {
+export default function OrderModal({
+  course,
+  onClose,
+  onSubmit,
+}: OrderModalProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [order, setOrder] = useState(defaultOrder);
   const [enablePrice, setEnablePrice] = useState(false);
@@ -123,7 +127,6 @@ export default function OrderModal({ course, onClose, onSubmit }: OrderModalProp
                   }}
                   type="text"
                   name="price"
-                  id="price"
                   className="disabled:opacity-50 w-80 mb-1 focus:ring-indigo-500 shadow-md focus:border-indigo-500 block pl-7 p-4 sm:text-sm border-gray-300 rounded-md"
                 />
                 <p className="text-xs text-gray-700">
@@ -142,7 +145,6 @@ export default function OrderModal({ course, onClose, onSubmit }: OrderModalProp
                   }
                   type="email"
                   name="email"
-                  id="email"
                   className="w-80 focus:ring-indigo-500 shadow-md focus:border-indigo-500 block pl-7 p-4 sm:text-sm border-gray-300 rounded-md"
                   placeholder="x@y.com"
                 />
@@ -162,7 +164,6 @@ export default function OrderModal({ course, onClose, onSubmit }: OrderModalProp
                   }
                   type="email"
                   name="confirmationEmail"
-                  id="confirmationEmail"
                   className="w-80 focus:ring-indigo-500 shadow-md focus:border-indigo-500 block pl-7 p-4 sm:text-sm border-gray-300 rounded-md"
                   placeholder="x@y.com"
                 />

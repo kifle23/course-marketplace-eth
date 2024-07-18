@@ -9,8 +9,8 @@ import {
 } from "react";
 import detectEthereumProvider from "@metamask/detect-provider";
 import Web3 from "web3";
-import { SetupHooks } from "./web3/hooks/setupHooks";
 import { loadContract } from "@utils/load-contract";
+import { SetupHooks } from "./web3/hooks/setupHooks";
 
 interface Web3State {
   web3: Web3 | null;
@@ -23,11 +23,6 @@ interface Web3State {
 }
 interface Web3ProviderProps {
   children: ReactNode;
-}
-interface Account {
-  account: string;
-  isAdmin: boolean;
-  mutate: () => void;
 }
 
 const Web3Context = createContext<Web3State | undefined>(undefined);
