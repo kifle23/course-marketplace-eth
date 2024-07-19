@@ -12,9 +12,7 @@ const fetcher = async (url: string): Promise<number | null> => {
 };
 
 export const useEthPrice = () => {
-  const { data, ...rest } = useSWR<number | null>(URL, fetcher, {
-    refreshInterval: 10000,
-  });
+  const { data, ...rest } = useSWR<number | null>(URL, fetcher);
 
   const perItem =
     data !== null && data !== undefined

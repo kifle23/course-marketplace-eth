@@ -5,12 +5,14 @@ import Link from "next/link";
 import { Button } from "@components/ui/common";
 import { useState } from "react";
 import { useWalletInfo } from "@components/hooks/web3";
-import { OrderModal } from '@components/ui/order';
+import { OrderModal } from "@components/ui/order";
+import { useWeb3 } from "@components/providers";
 
 interface CardProps {
   course: Course;
   useCustomCard?: boolean;
 }
+
 interface Order {
   price: string;
   email: string;
@@ -18,12 +20,60 @@ interface Order {
 }
 
 export default function Card({ course, useCustomCard }: CardProps) {
+  const { web3, contract } = useWeb3();
   const [selectedCourse, setSelectedCourse] = useState<Course | null>(null);
-  const { canPurchase } = useWalletInfo();
+  const { canPurchase, account } = useWalletInfo();
 
-  const purchaseCourse = (order: Order) => {
-    alert(JSON.stringify(order));
-  }
+  const convertCourseIdToBytes16 = (courseId: number, web3: any): string => {
+    const hexString = web3.utils.toHex(courseId);
+    const paddedHex = web3.utils.padLeft(hexString, 32);
+    return paddedHex;
+  };
+
+  const purchaseCourse = async (order: Order) => {
+    if (!selectedCourse || !web3 || !contract) {
+      console.error("Selected course, web3 instance, or contract not found.");
+      return;
+    }
+
+    const courseId = selectedCourse.id;
+
+    const retryPurchase = async (retries: number): Promise<void> => {
+      if (retries === 0) {
+        console.error("Failed to purchase course after multiple attempts.");
+        return;
+      }
+
+      try {
+        const courseIdBytes = convertCourseIdToBytes16(Number(courseId), web3);
+        const orderHash = web3.utils.soliditySha3(
+          { type: "bytes16", value: courseIdBytes },
+          { type: "address", value: account.data }
+        );
+        const emailHash = web3.utils.sha3(order.email);
+        const proof = web3.utils.soliditySha3(
+          { type: "bytes32", value: emailHash },
+          { type: "bytes32", value: orderHash }
+        );
+
+        await contract.methods.purchaseCourse(courseIdBytes, proof).send({
+          from: account.data,
+          value: web3.utils.toWei(order.price, "ether"),
+        });
+
+        console.log("Course purchased successfully");
+      } catch (error) {
+        console.clear();
+        console.error(
+          `Error purchasing course, retries left: ${retries - 1}`,
+          error
+        );
+        await retryPurchase(retries - 1);
+      }
+    };
+
+    await retryPurchase(3);
+  };
 
   return (
     <div className="bg-white rounded-xl shadow-md overflow-hidden md:max-w-2xl">
