@@ -35,8 +35,13 @@ export const useWalletInfo = () => {
   return {
     account,
     network,
-    canPurchase:!!(account.data && network.isSupported),
+    canPurchase: !!(account.data && network.isSupported),
   };
+};
+
+export const useOwnedCourses = () => {
+  const swrRes = useWeb3Hooks((hooks) => hooks.useOwnedCourses)();
+  return { ownedCourses: { data: swrRes } };
 };
 
 type Data = null | string | any[] | object;
