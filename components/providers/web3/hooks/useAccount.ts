@@ -1,16 +1,11 @@
 import { useEffect } from "react";
 import Web3 from "web3";
 import useSWR from "swr";
+import { Account } from "@interfaces/iWalletInfo";
 
 interface UseAccountProps {
   web3: Web3 | null;
   provider: any;
-}
-
-interface Account {
-  data: string;
-  isAdmin: boolean;
-  mutate: () => void;
 }
 
 const adminAddresses: { [key: string]: boolean } = {
