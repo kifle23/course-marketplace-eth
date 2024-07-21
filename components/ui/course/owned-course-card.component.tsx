@@ -1,18 +1,21 @@
 "use client";
-import { useOwnedCourses } from "@components/hooks/web3";
+import { useAccount, useOwnedCourses } from "@components/hooks/web3";
+import { getAllCourses } from "@content/courses/fetcher";
 
 interface OwnedCourseCardProps {
   children: React.ReactNode;
 }
 
 export default function OwnedCourseCard({ children }: OwnedCourseCardProps) {
-  const { ownedCourses } = useOwnedCourses();
-  console.log("ownedCourses: ", ownedCourses);
-  console.log("ownedCourses.data: ", ownedCourses.data);
+  const { data: courses } = getAllCourses();
+  const { account } = useAccount();
+
+  const { ownedCourses } = useOwnedCourses(courses, account.data);
+  console.log("ownedCourses", ownedCourses.data);
 
   return (
     <div className="bg-white border shadow overflow-hidden sm:rounded-lg mb-3">
-      {ownedCourses.data}
+      {JSON.stringify(ownedCourses.data)}
       <div className="px-4 py-5 sm:px-6">
         <h3 className="text-lg leading-6 font-medium text-gray-900">
           Next JS & Typescript with Shopify Integration - Full Guide
