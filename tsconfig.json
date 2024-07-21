@@ -22,7 +22,8 @@
       "@styles/*": ["styles/*"],
       "@components/*": ["components/*"],
       "@content/*": ["content/*"],
-      "@utils/*": ["utils/*"]
+      "@utils/*": ["utils/*"],
+      "@interfaces/*": ["interfaces/*"]
     }
   },
   "include": [
