@@ -1,22 +1,6 @@
 import { useWeb3Hooks } from "@components/providers/web3.component";
-
-interface Account {
-  account: {
-    data: string;
-    isAdmin: boolean;
-    mutate: () => void;
-    isInitialized: boolean;
-  };
-}
-
-interface Network {
-  network: {
-    data: string;
-    target: string;
-    isSupported: boolean;
-    isInitialized: boolean;
-  };
-}
+import { Course } from "@content/courses/types";
+import { Account, Network } from "@interfaces/iWalletInfo";
 
 export const useAccount = (): Account => {
   const swrRes = enhanceHook(useWeb3Hooks((hooks) => hooks.useAccount));
@@ -39,9 +23,11 @@ export const useWalletInfo = () => {
   };
 };
 
-export const useOwnedCourses = () => {
-  const swrRes = useWeb3Hooks((hooks) => hooks.useOwnedCourses)();
-  return { ownedCourses: { data: swrRes } };
+export const useOwnedCourses = (courses: Course[], account: string) => {
+  const swrRes = enhanceHook(
+    useWeb3Hooks((hooks) => hooks.useOwnedCourses)(courses, account)
+  );
+  return { ownedCourses: swrRes };
 };
 
 type Data = null | string | any[] | object;
