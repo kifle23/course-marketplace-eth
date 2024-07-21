@@ -1,5 +1,5 @@
 export interface Course {
-  id: string;
+  id: number;
   type: string;
   title: string;
   description: string;
@@ -12,5 +12,5 @@ export interface Course {
 }
 
 export interface CourseMap {
-  [id: string]: Course & { index: number };
+  [id: number]: Course & { index: number };
 }
