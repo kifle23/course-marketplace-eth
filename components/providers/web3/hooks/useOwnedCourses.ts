@@ -9,15 +9,36 @@ interface UseOwnedCoursesProps {
   account: string;
 }
 
-const fetchOwnedCourses = async (web3: Web3, contract: any, account: string, courses: Course[]) => {
+const fetchOwnedCourses = async (
+  web3: Web3,
+  contract: any,
+  account: string,
+  courses: Course[]
+) => {
   const ownedCourses = [];
   for (const course of courses) {
-    ownedCourses.push(course.id);
+    const hexCourseId = web3.utils.toHex(course.id);
+    const courseIdBytes = web3.utils.padLeft(hexCourseId, 32);
+    const courseHash = web3.utils.soliditySha3(
+      { type: "bytes16", value: courseIdBytes },
+      { type: "address", value: account }
+    );
+    const ownedCourse = await contract.methods
+      .getCourseByHash(courseHash)
+      .call();
+    if (ownedCourse.owner !== "0x0000000000000000000000000000000000000000") {
+      ownedCourses.push(course);
+    }
   }
   return ownedCourses;
 };
 
-export const OwnedCoursesHandler = ({ web3, contract, courses, account }: UseOwnedCoursesProps) => {
+export const OwnedCoursesHandler = ({
+  web3,
+  contract,
+  courses,
+  account,
+}: UseOwnedCoursesProps) => {
   const shouldFetch = web3 && contract && account;
 
   const swrRes = useSWR(
