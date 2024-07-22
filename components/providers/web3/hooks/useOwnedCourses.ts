@@ -1,4 +1,5 @@
 import { Course } from "@content/courses/types";
+import { normalizeOwnedCourse } from "@utils/normalize";
 import useSWR from "swr";
 import Web3 from "web3";
 
@@ -27,7 +28,8 @@ const fetchOwnedCourses = async (
       .getCourseByHash(courseHash)
       .call();
     if (ownedCourse.owner !== "0x0000000000000000000000000000000000000000") {
-      ownedCourses.push(course);
+      const normalized = normalizeOwnedCourse(web3)(course, ownedCourse);
+      ownedCourses.push(normalized);
     }
   }
   return ownedCourses;
