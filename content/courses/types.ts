@@ -14,7 +14,7 @@ export interface CourseMap {
   [id: number]: Course & { index: number };
 }
 export interface OwnedCourse {
-  id: string;
+  id: number;
   proof: string;
   owner: string;
   price: string;
