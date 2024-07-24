@@ -41,7 +41,7 @@ export default function Nav() {
               </ActiveLink>
               {isLoading ? (
                 <Button disabled={true}>Loading</Button>
-              ) : account.isInitialized ? (
+              ) : account.data && account.isInitialized ? (
                 <Button hoverable={false}>
                   Hi there {account.isAdmin && "Admin"}
                 </Button>
@@ -134,6 +134,7 @@ export default function Nav() {
         </nav>
       </div>
       {!isOpen &&
+        account.data &&
         account.isInitialized &&
         !pathname.includes("/marketplace") && (
           <div className="hidden sm:flex justify-end pt-1 sm:px-6 lg:px-8">
