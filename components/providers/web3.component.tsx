@@ -39,7 +39,12 @@ const createWeb3State = ({
     provider: provider || null,
     contract: contract || null,
     isLoading: isLoading ?? true,
-    hooks: () => SetupHooks({ web3: web3 || null, provider: provider }),
+    hooks: () =>
+      SetupHooks({
+        web3: web3 || null,
+        provider: provider,
+        contract: contract,
+      }),
     requireInstall: requireInstall ?? false,
   };
 };
@@ -51,7 +56,7 @@ export default function Web3Provider({ children }: Web3ProviderProps) {
       provider: null,
       contract: null,
       isLoading: true,
-      hooks: () => SetupHooks({ web3: null, provider: null }),
+      hooks: () => SetupHooks({ web3: null, provider: null, contract: null }),
       requireInstall: false,
     })
   );
@@ -68,7 +73,7 @@ export default function Web3Provider({ children }: Web3ProviderProps) {
           provider,
           contract: contract,
           isLoading: false,
-          hooks: () => SetupHooks({ web3, provider }),
+          hooks: () => SetupHooks({ web3, provider, contract }),
         })
       );
     } else {

@@ -1,5 +1,5 @@
 export interface Course {
-  id: string;
+  id: number;
   type: string;
   title: string;
   description: string;
@@ -10,7 +10,13 @@ export interface Course {
   wsl: string[];
   createdAt: string;
 }
-
 export interface CourseMap {
-  [id: string]: Course & { index: number };
+  [id: number]: Course & { index: number };
+}
+export interface OwnedCourse {
+  id: number;
+  proof: string;
+  owner: string;
+  price: string;
+  state: number;
 }

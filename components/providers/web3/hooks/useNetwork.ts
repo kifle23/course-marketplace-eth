@@ -1,3 +1,4 @@
+import { Network } from "@interfaces/iWalletInfo";
 import { useEffect } from "react";
 import useSWR from "swr";
 import Web3 from "web3";
@@ -16,11 +17,6 @@ const targetNetwork =
 interface UseNetworkProps {
   web3: Web3 | null;
   provider: any;
-}
-interface Network {
-  data: string;
-  target: string;
-  isSupported: boolean;
 }
 
 const useNetworkSWR = (web3: Web3 | null) => {
