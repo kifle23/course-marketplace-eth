@@ -7,8 +7,8 @@ export default function EthRates() {
   const { eth } = useEthPrice();
 
   return (
-    <div className="flex flex-col xs:flex-row mb-5">
-      <div className="md:w-1/4 flex items-stretch text-center xs:mb-2 md:mr-2 ">
+    <div className="flex flex-col xs:flex-row mt-2 mb-5">
+      <div className="md:w-1/4 flex mb-2 xs:mb-0 items-stretch text-center xs:mr-2 ">
         <div className="flex-1 p-10 border drop-shadow rounded-md">
           <div className="flex items-center justify-center">
             {eth.data ? (

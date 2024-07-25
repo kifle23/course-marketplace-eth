@@ -8,7 +8,6 @@ export default function OwnedCourses() {
       <MarketHeader />
       <section className="grid grid-cols-1">
         <OwnedCourseCard>
-          <Message>Purchased</Message>
           <Button>Watch the course</Button>
         </OwnedCourseCard>
       </section>
