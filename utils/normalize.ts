@@ -13,7 +13,7 @@ export const normalizeOwnedCourse =
       ...course,
       ownedCourseId: ownedCourse.id,
       proof: ownedCourse.proof,
-      owned: ownedCourse.owner,
+      owner: ownedCourse.owner,
       price: web3.utils.fromWei(ownedCourse.price, "ether"),
       state: COURSE_STATES[ownedCourse.state],
     };

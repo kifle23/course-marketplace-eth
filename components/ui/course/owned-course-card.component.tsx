@@ -1,12 +1,10 @@
 "use client";
 import { useAccount, useOwnedCourses } from "@components/hooks/web3";
 import { getAllCourses } from "@content/courses/fetcher";
-import { CourseMap } from "@content/courses/types";
+import { Course } from "@content/courses/types";
 import Image from "next/image";
-
-interface OwnedCourseCardProps {
-  children: React.ReactNode;
-}
+import { Button } from "@components/ui/common";
+import { useRouter } from "next/navigation";
 
 const STATE_COLORS = {
   purchased: "indigo",
@@ -14,14 +12,15 @@ const STATE_COLORS = {
   deactivated: "red",
 };
 
-export default function OwnedCourseCard({ children }: OwnedCourseCardProps) {
+export default function OwnedCourseCard() {
   const { data: courses } = getAllCourses();
   const { account } = useAccount();
   const { ownedCourses } = useOwnedCourses(courses, account.data);
+  const router = useRouter();
 
   return (
     <>
-      {ownedCourses.data?.map((course: CourseMap) => {
+      {ownedCourses.data?.map((course: Course) => {
         const stateColor =
           STATE_COLORS[course.state as keyof typeof STATE_COLORS];
         return (
@@ -60,7 +59,7 @@ export default function OwnedCourseCard({ children }: OwnedCourseCardProps) {
                         Course ID
                       </dt>
                       <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                        {course.ownedCourseId}
+                        {Number(course.ownedCourseId?.toString()) + 1}
                       </dd>
                     </div>
                     <div className="bg-white px-4 py-5 sm:px-6">
@@ -71,7 +70,14 @@ export default function OwnedCourseCard({ children }: OwnedCourseCardProps) {
                         {course.proof}
                       </dd>
                     </div>
-                    <div className="bg-white px-4 py-5 sm:px-6">{children}</div>
+                    <div className="bg-white px-4 py-5 sm:px-6">
+                      {" "}
+                      <Button
+                        onClick={() => router.push(`/course/${course.slug}`)}
+                      >
+                        Watch the course
+                      </Button>
+                    </div>
                   </dl>
                 </div>
               </div>
