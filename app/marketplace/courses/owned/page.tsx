@@ -5,9 +5,7 @@ import { MarketHeader } from "@components/ui/marketplace";
 export default function OwnedCourses() {
   return (
     <>
-      <div className="py-4">
-        <MarketHeader />
-      </div>
+      <MarketHeader />
       <section className="grid grid-cols-1">
         <OwnedCourseCard>
           <Message>Purchased</Message>

@@ -7,9 +7,7 @@ export default function Marketplace() {
 
   return (
     <>
-      <div className="py-4">
-        <MarketHeader />
-      </div>
+      <MarketHeader />
       <CourseList courses={courses} useCustomCard={true} />
     </>
   );

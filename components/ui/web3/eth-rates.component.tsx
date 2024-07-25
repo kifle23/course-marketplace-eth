@@ -5,11 +5,12 @@ import { Loader } from "../common";
 
 export default function EthRates() {
   const { eth } = useEthPrice();
+
   return (
-    <div className="grid grid-cols-4 mb-5">
-      <div className="flex flex-1 items-stretch text-center">
-        <div className="p-10 border drop-shadow rounded-md">
-          <div className="flex items-center">
+    <div className="flex flex-col xs:flex-row mb-5">
+      <div className="md:w-1/4 flex items-stretch text-center xs:mb-2 md:mr-2 ">
+        <div className="flex-1 p-10 border drop-shadow rounded-md">
+          <div className="flex items-center justify-center">
             {eth.data ? (
               <>
                 <Image
@@ -19,7 +20,7 @@ export default function EthRates() {
                   src="/small-eth.webp"
                   alt=""
                 />
-                <span className="text-2xl font-bold">{eth.data}$</span>
+                <span className="text-xl font-bold ml-2">{eth.data}$</span>
               </>
             ) : (
               <div className="w-full flex justify-center">
@@ -27,15 +28,15 @@ export default function EthRates() {
               </div>
             )}
           </div>
-          <p className="text-xl text-gray-500">Current eth Price</p>
+          <p className="text-lg text-gray-500">Current eth Price</p>
         </div>
       </div>
-      <div className="flex flex-1 items-stretch text-center">
-        <div className="p-10 border drop-shadow rounded-md">
-          <div className="flex items-center">
+      <div className="md:w-1/4 flex items-stretch text-center">
+        <div className="flex-1 p-10 border drop-shadow rounded-md">
+          <div className="flex items-center justify-center">
             {eth.data ? (
               <>
-                <span className="text-2xl font-bold">{eth.perItem}</span>
+                <span className="text-xl font-bold">{eth.perItem}</span>
                 <Image
                   layout="fixed"
                   height="35"
@@ -43,7 +44,9 @@ export default function EthRates() {
                   src="/small-eth.webp"
                   alt=""
                 />
-                <span className="text-2xl font-bold">= {COURSE_PRICE}$</span>
+                <span className="text-xl font-bold ml-2">
+                  = {COURSE_PRICE}$
+                </span>
               </>
             ) : (
               <div className="w-full flex justify-center">
@@ -51,7 +54,7 @@ export default function EthRates() {
               </div>
             )}
           </div>
-          <p className="text-xl text-gray-500">Price per course</p>
+          <p className="text-lg text-gray-500">Price per course</p>
         </div>
       </div>
     </div>
