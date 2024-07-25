@@ -16,7 +16,7 @@ export default function Nav() {
       <div className="relative pt-6 px-4 sm:px-6 lg:px-8">
         <nav className="relative" aria-label="Global">
           <div className="flex justify-between items-center">
-            <div className="hidden sm:flex items-center">
+            <div className="hidden cm:flex items-center">
               <ActiveLink href="/">
                 <span className="font-medium mr-8 text-gray-500 hover:text-gray-900">
                   Home
@@ -33,7 +33,7 @@ export default function Nav() {
                 </span>
               </ActiveLink>
             </div>
-            <div className="hidden md:flex items-center">
+            <div className="hidden cm:flex items-center">
               <ActiveLink href="/wishlist">
                 <span className="font-medium mr-8 text-gray-500 hover:text-gray-900">
                   Wishlist
@@ -58,7 +58,7 @@ export default function Nav() {
                 <Button onClick={connect}>Connect</Button>
               )}
             </div>
-            <div className="md:hidden">
+            <div className="cm:hidden flex w-full justify-between">
               <button
                 onClick={() => setIsOpen(!isOpen)}
                 className="text-gray-500 hover:text-gray-900 focus:outline-none focus:text-gray-900"
@@ -80,10 +80,28 @@ export default function Nav() {
                   ></path>
                 </svg>
               </button>
+              {isLoading ? (
+                <Button disabled={true}>Loading</Button>
+              ) : account.data && account.isInitialized ? (
+                <Button hoverable={false}>
+                  Hi there {account.isAdmin && "Admin"}
+                </Button>
+              ) : requireInstall ? (
+                <Button
+                  onClick={() =>
+                    window.open("https://metamask.io/download.html", "_blank")
+                  }
+                  variant="secondary"
+                >
+                  Install MetaMask
+                </Button>
+              ) : (
+                <Button onClick={connect}>Connect</Button>
+              )}
             </div>
           </div>
           {isOpen && (
-            <div className="md:hidden mt-4">
+            <div className="cm:hidden mt-4">
               <ActiveLink href="/">
                 <span className="block font-medium mb-4 text-gray-500 hover:text-gray-900">
                   Home
@@ -104,31 +122,6 @@ export default function Nav() {
                   Wishlist
                 </span>
               </ActiveLink>
-              {isLoading ? (
-                <span className="font-medium mr-8 text-gray-500 hover:text-gray-900">
-                  Loading
-                </span>
-              ) : account.isInitialized ? (
-                <span className="font-medium mr-8 text-gray-500 hover:text-gray-900">
-                  Hi There {account.isAdmin && "Admin"}
-                </span>
-              ) : requireInstall ? (
-                <span
-                  onClick={() =>
-                    window.open("https://metamask.io/download.html", "_blank")
-                  }
-                  className="font-medium mr-8 text-gray-500 hover:text-gray-900"
-                >
-                  Install MetaMask
-                </span>
-              ) : (
-                <span
-                  onClick={connect}
-                  className="font-medium mr-8 text-gray-500 hover:text-gray-900"
-                >
-                  Connect
-                </span>
-              )}
             </div>
           )}
         </nav>
@@ -137,8 +130,8 @@ export default function Nav() {
         account.data &&
         account.isInitialized &&
         !pathname.includes("/marketplace") && (
-          <div className="hidden sm:flex justify-end pt-1 sm:px-6 lg:px-8">
-            <div className="text-white bg-indigo-600 rounded-md p-2">
+          <div className="hidden cm:flex justify-end  pt-1 sm:px-6 lg:px-8">
+            <div className="text-white break-words text-sm bg-indigo-600 rounded-md p-2">
               {account.data}
             </div>
           </div>

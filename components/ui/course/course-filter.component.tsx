@@ -2,19 +2,19 @@ import { Button } from "@components/ui/common";
 
 export default function CourseFilter() {
   return (
-    <div className="flex items-center my-4">
-      <div className="flex mr-2 relative rounded-md">
+    <div className="flex flex-col md:flex-row items-center my-4">
+      <div className="flex mb-4 md:mb-0 md:mr-2 relative rounded-md w-full md:w-auto">
         <input
           type="text"
           name="account"
           id="account"
-          className="w-96 focus:ring-indigo-500 shadow-md focus:border-indigo-500 block pl-7 p-4 sm:text-sm border-gray-300 rounded-md"
+          className="w-full md:w-52 lg:w-96 focus:ring-indigo-500 shadow-md focus:border-indigo-500 block pl-7 p-4 sm:text-sm border-gray-300 rounded-md"
           placeholder="0x2341ab..."
         />
-        <Button>Search</Button>
+        <Button className="ml-2 md:ml-0 mt-2 md:mt-0">Search</Button>
       </div>
-      <div className="relative text-gray-700">
-        <select className="w-72 h-10 pl-3 pr-6 text-base placeholder-gray-600 border rounded-lg appearance-none focus:shadow-outline">
+      <div className="relative text-gray-700 w-full md:w-auto">
+        <select className="w-full md:w-72 h-10 pl-3 pr-6 text-base placeholder-gray-600 border rounded-lg appearance-none focus:shadow-outline">
           <option>A regular sized select input</option>
           <option>Another option</option>
           <option>And one more</option>

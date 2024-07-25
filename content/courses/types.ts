@@ -9,6 +9,11 @@ export interface Course {
   slug: string;
   wsl: string[];
   createdAt: string;
+  state?: string;
+  price?: string;
+  ownedCourseId?: number;
+  proof?: string;
+  owned?: string;
 }
 export interface CourseMap {
   [id: number]: Course & { index: number };
