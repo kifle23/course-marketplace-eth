@@ -78,9 +78,9 @@ export default function Card({ course, useCustomCard }: CardProps) {
   return (
     <div className="bg-white rounded-xl shadow-md overflow-hidden md:max-w-2xl">
       <div className="flex flex-col md:flex-row h-full">
-        <div className="flex-1 relative w-full md:w-[50%] h-auto md:h-full">
+        <div className="relative w-full h-48 md:w-[50%] md:h-auto">
           <Image
-            className={`object-cover h-full w-full ${
+            className={`object-cover w-full h-full ${
               !canPurchase && "filter grayscale"
             }`}
             src={course.coverImage}
@@ -89,14 +89,14 @@ export default function Card({ course, useCustomCard }: CardProps) {
             layout="fill"
           />
         </div>
-        <div className="flex-2 p-8 pb-4 flex flex-col justify-between">
+        <div className="p-8 pb-4 flex flex-col justify-between w-full md:w-[50%]">
           <div>
             <div className="uppercase tracking-wide text-sm text-indigo-500 font-semibold">
               {course.type}
             </div>
             <Link
               href={`/course/${course.slug}`}
-              className="h-12 block mt-1 text-sm xs:text-lg leading-tight font-medium text-black hover:underline"
+              className="block mt-1 text-sm xs:text-lg leading-tight font-medium text-black hover:underline"
             >
               {course.title}
             </Link>
