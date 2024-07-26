@@ -30,6 +30,13 @@ export const useOwnedCourses = (courses: Course[], account: string) => {
   return { ownedCourses: swrRes };
 };
 
+export const useOwnedCourse = (course: Course, account: string) => {
+  const swrRes = enhanceHook(
+    useWeb3Hooks((hooks) => hooks.useOwnedCourse)(course, account)
+  );
+  return { ownedCourse: swrRes };
+};
+
 type Data = null | string | any[] | object;
 
 const _isEmpty = (data: Data): boolean => {
