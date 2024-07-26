@@ -22,7 +22,10 @@ export default function Curriculum({ course }: CurriculumProps) {
   const account = useAccount();
   const { ownedCourse } = useOwnedCourse(course, account.data);
   const courseState = ownedCourse.data?.state;
-  const locked = courseState === "purchased" || courseState === "deactivated";
+  const locked =
+    !courseState ||
+    courseState === "purchased" ||
+    courseState === "deactivated";
 
   return (
     <section className="max-w-5xl mx-auto">
