@@ -14,7 +14,7 @@ import Link from "next/link";
 import { ReactNode, use } from "react";
 
 interface OwnedCourseCardProps {
-  children?: ReactNode;
+  managed?: boolean;
 }
 
 const STATE_COLORS = {
@@ -23,7 +23,7 @@ const STATE_COLORS = {
   deactivated: "red",
 };
 
-export default function OwnedCourseCard({ children }: OwnedCourseCardProps) {
+export default function OwnedCourseCard({ managed }: OwnedCourseCardProps) {
   const { requireInstall } = useWeb3();
   const { data: courses } = getAllCourses();
   const account = useAccount();
@@ -109,8 +109,17 @@ export default function OwnedCourseCard({ children }: OwnedCourseCardProps) {
                       </dd>
                     </div>
                     <div className="bg-white px-4 py-5 sm:px-6">
-                      {children ? (
-                        children
+                      {managed ? (
+                        <div className="flex mr-2 relative rounded-md">
+                          <input
+                            type="text"
+                            name="account"
+                            id="account"
+                            className="w-96 focus:ring-indigo-500 shadow-md focus:border-indigo-500 block pl-7 p-4 sm:text-sm border-gray-300 rounded-md"
+                            placeholder="0x2341ab..."
+                          />
+                          <Button>Verify</Button>
+                        </div>
                       ) : (
                         <Button
                           onClick={() => router.push(`/course/${course.slug}`)}

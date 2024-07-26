@@ -6,8 +6,7 @@ export default function OwnedCourses() {
     <>
       <MarketHeader />
       <section className="grid grid-cols-1">
-        <OwnedCourseCard>         
-        </OwnedCourseCard>
+        <OwnedCourseCard></OwnedCourseCard>
       </section>
     </>
   );
