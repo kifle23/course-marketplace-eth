@@ -1,13 +1,18 @@
+"use client";
+import { useAccount, useOwnedCourse } from "@components/hooks/web3";
+import { Course } from "@content/courses/types";
 import Image from "next/image";
 import Link from "next/link";
 
 interface HeroProps {
-  title: string;
-  description: string;
-  image: string;
+  course: Course;
 }
 
-export default function Hero({ title, description, image }: HeroProps) {
+export default function Hero({ course }: HeroProps) {
+  const { account } = useAccount();
+  const { ownedCourse } = useOwnedCourse(course, account.data);
+  console.log("ownedCourse: ", ownedCourse);
+
   return (
     <section>
       <div className="relative bg-white overflow-hidden">
@@ -27,14 +32,14 @@ export default function Hero({ title, description, image }: HeroProps) {
               <div className="sm:text-center lg:text-left">
                 <h1 className="text-4xl tracking-tight font-extrabold text-gray-900 sm:text-5xl md:text-6xl">
                   <span className="block xl:inline">
-                    {title.substring(0, title.length / 2)}
+                    {course.title.substring(0, course.title.length / 2)}
                   </span>
                   <span className="block text-indigo-600 xl:inline">
-                    {title.substring(title.length / 2)}
+                    {course.title.substring(course.title.length / 2)}
                   </span>
                 </h1>
                 <p className="mt-3 text-base text-gray-500 sm:mt-5 sm:text-lg sm:max-w-xl sm:mx-auto md:mt-5 md:text-xl lg:mx-0">
-                  {description}
+                  {course.description}
                 </p>
                 <div className="mt-5 sm:mt-8 sm:flex sm:justify-center lg:justify-start">
                   <div className="rounded-md shadow">
@@ -62,8 +67,8 @@ export default function Hero({ title, description, image }: HeroProps) {
           <div className="h-full w-full">
             <Image
               className="w-full h-full object-cover"
-              src={image}
-              alt={title}
+              src={course.coverImage}
+              alt={course.title}
               fill
               sizes="(max-width: 640px) 100vw,
              (max-width: 768px) 100vw,

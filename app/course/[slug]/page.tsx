@@ -18,11 +18,7 @@ export default async function CoursePage({ params }: CoursePageProps) {
   return (
     <div className="relative max-w-7xl mx-auto px-4">
       <div className="py-4">
-        <CourseHero
-          title={course.title}
-          description={course.description}
-          image={course.coverImage}
-        />
+        <CourseHero course={course} />
       </div>
       <KeyPoints points={course.wsl} />
       <Curriculum locked={true} />
