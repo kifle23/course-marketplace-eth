@@ -1,5 +1,9 @@
 "use client";
-import { useAccount, useOwnedCourses } from "@components/hooks/web3";
+import {
+  useAccount,
+  useManagedCourses,
+  useOwnedCourses,
+} from "@components/hooks/web3";
 import { getAllCourses } from "@content/courses/fetcher";
 import { Course } from "@content/courses/types";
 import Image from "next/image";
@@ -7,6 +11,11 @@ import { Button, Message } from "@components/ui/common";
 import { useRouter } from "next/navigation";
 import { useWeb3 } from "@components/providers";
 import Link from "next/link";
+import { ReactNode, use } from "react";
+
+interface OwnedCourseCardProps {
+  children?: ReactNode;
+}
 
 const STATE_COLORS = {
   purchased: "indigo",
@@ -14,12 +23,14 @@ const STATE_COLORS = {
   deactivated: "red",
 };
 
-export default function OwnedCourseCard() {
+export default function OwnedCourseCard({ children }: OwnedCourseCardProps) {
   const { requireInstall } = useWeb3();
   const { data: courses } = getAllCourses();
   const account = useAccount();
   const { ownedCourses } = useOwnedCourses(courses, account.data);
   const router = useRouter();
+  const { managedCourses } = useManagedCourses(courses, account.data);
+  console.log("managedCourses: ", managedCourses.data);
 
   return (
     <>
@@ -98,12 +109,15 @@ export default function OwnedCourseCard() {
                       </dd>
                     </div>
                     <div className="bg-white px-4 py-5 sm:px-6">
-                      {" "}
-                      <Button
-                        onClick={() => router.push(`/course/${course.slug}`)}
-                      >
-                        Watch the course
-                      </Button>
+                      {children ? (
+                        children
+                      ) : (
+                        <Button
+                          onClick={() => router.push(`/course/${course.slug}`)}
+                        >
+                          Watch the course
+                        </Button>
+                      )}
                     </div>
                   </dl>
                 </div>
