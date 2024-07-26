@@ -4,17 +4,17 @@ import { Account, Network } from "@interfaces/iWalletInfo";
 
 export const useAccount = (): Account => {
   const swrRes = enhanceHook(useWeb3Hooks((hooks) => hooks.useAccount));
-  return { account: swrRes };
+  return swrRes;
 };
 
 export const useNetwork = (): Network => {
   const swrRes = enhanceHook(useWeb3Hooks((hooks) => hooks.useNetwork));
-  return { network: swrRes };
+  return swrRes;
 };
 
 export const useWalletInfo = () => {
-  const { account } = useAccount();
-  const { network } = useNetwork();
+  const account = useAccount();
+  const network = useNetwork();
 
   return {
     account,
@@ -28,6 +28,13 @@ export const useOwnedCourses = (courses: Course[], account: string) => {
     useWeb3Hooks((hooks) => hooks.useOwnedCourses)(courses, account)
   );
   return { ownedCourses: swrRes };
+};
+
+export const useOwnedCourse = (course: Course, account: string) => {
+  const swrRes = enhanceHook(
+    useWeb3Hooks((hooks) => hooks.useOwnedCourse)(course, account)
+  );
+  return { ownedCourse: swrRes };
 };
 
 type Data = null | string | any[] | object;

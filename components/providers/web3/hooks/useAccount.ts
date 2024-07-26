@@ -13,7 +13,10 @@ const adminAddresses: { [key: string]: boolean } = {
   "0x9345724d971d791dc155f3b85a13c50bbd1774b604e385808470082ca55940c0": true,
 };
 
-export const AccountHandler = ({ web3, provider }: UseAccountProps) => {
+export const AccountHandler = ({
+  web3,
+  provider,
+}: UseAccountProps): Account => {
   const { data, mutate, ...rest } = useSWR(
     () => (web3 ? "web3/accounts" : null),
     async () => {
@@ -43,15 +46,10 @@ export const AccountHandler = ({ web3, provider }: UseAccountProps) => {
       provider.removeListener("accountsChanged", handleAccountsChanged);
   }, [provider, mutate]);
 
-  const getAccount = (): Account => {
-    return {
-      data: data ?? "",
-      isAdmin:
-        !!(data && web3 && adminAddresses[web3.utils.keccak256(data)]) ?? false,
-      mutate,
-      ...rest,
-    };
+  return {
+    data: data ?? "",
+    isAdmin: !!(data && web3 && adminAddresses[web3.utils.keccak256(data)]),
+    mutate,
+    ...rest,
   };
-
-  return getAccount();
 };

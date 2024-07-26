@@ -54,14 +54,10 @@ export const NetworkHandler = ({
     return () => provider.removeListener("chainChanged", handleChainChanged);
   }, [provider, mutate]);
 
-  const getNetwork = (): Network => {
-    return {
-      data: data ?? "",
-      target: targetNetwork,
-      isSupported: data === targetNetwork,
-      ...rest,
-    };
+  return {
+    data: data ?? "",
+    target: targetNetwork,
+    isSupported: data === targetNetwork,
+    ...rest,
   };
-
-  return getNetwork();
 };

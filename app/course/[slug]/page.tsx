@@ -1,5 +1,10 @@
 import { NotFound } from "@components/ui/common";
-import { Curriculum, CourseHero, KeyPoints } from "@components/ui/course";
+import {
+  Curriculum,
+  CourseHero,
+  KeyPoints,
+  CourseMessage,
+} from "@components/ui/course";
 import { getAllCourses, getCourseBySlug } from "@content/courses/fetcher";
 
 interface CoursePageProps {
@@ -18,14 +23,11 @@ export default async function CoursePage({ params }: CoursePageProps) {
   return (
     <div className="relative max-w-7xl mx-auto px-4">
       <div className="py-4">
-        <CourseHero
-          title={course.title}
-          description={course.description}
-          image={course.coverImage}
-        />
+        <CourseHero course={course} />
       </div>
       <KeyPoints points={course.wsl} />
-      <Curriculum locked={true} />
+      <CourseMessage course={course} />
+      <Curriculum course={course} />
     </div>
   );
 }
