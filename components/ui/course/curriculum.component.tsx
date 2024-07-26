@@ -19,7 +19,7 @@ export default function Curriculum({ course }: CurriculumProps) {
     "Safe operator",
   ];
   const { isLoading } = useWeb3();
-  const { account } = useAccount();
+  const account = useAccount();
   const { ownedCourse } = useOwnedCourse(course, account.data);
   const courseState = ownedCourse.data?.state;
   const locked = courseState === "purchased" || courseState === "deactivated";
@@ -79,19 +79,28 @@ export default function Curriculum({ course }: CurriculumProps) {
                         ) : locked ? (
                           <>
                             {courseState === "deactivated" && (
-                              <Link href="/marketplace" className="text-indigo-600 hover:text-indigo-900">
-                                  Get Access
+                              <Link
+                                href="/marketplace"
+                                className="text-indigo-600 hover:text-indigo-900"
+                              >
+                                Get Access
                               </Link>
                             )}
                             {courseState === "purchased" && (
-                              <Link href="/faq" className="text-yellow-500 hover:text-yellow-900">
-                                  Waiting for activation...
+                              <Link
+                                href="/faq"
+                                className="text-yellow-500 hover:text-yellow-900"
+                              >
+                                Waiting for activation...
                               </Link>
                             )}
                           </>
                         ) : (
-                          <Link href="/watch" className="text-indigo-600 hover:text-indigo-900">
-                              Watch
+                          <Link
+                            href="/watch"
+                            className="text-indigo-600 hover:text-indigo-900"
+                          >
+                            Watch
                           </Link>
                         )}
                       </td>

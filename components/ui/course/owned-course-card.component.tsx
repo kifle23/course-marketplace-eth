@@ -17,7 +17,7 @@ const STATE_COLORS = {
 export default function OwnedCourseCard() {
   const { requireInstall } = useWeb3();
   const { data: courses } = getAllCourses();
-  const { account } = useAccount();
+  const account = useAccount();
   const { ownedCourses } = useOwnedCourses(courses, account.data);
   const router = useRouter();
 

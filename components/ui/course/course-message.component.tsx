@@ -8,7 +8,7 @@ interface CourseMessageProps {
 }
 
 export default function CourseMessage({ course }: CourseMessageProps) {
-  const { account } = useAccount();
+  const account = useAccount();
   const { ownedCourse } = useOwnedCourse(course, account.data);
   const courseState = ownedCourse.data?.state;
 

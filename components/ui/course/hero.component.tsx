@@ -9,7 +9,7 @@ interface HeroProps {
 }
 
 export default function Hero({ course }: HeroProps) {
-  const { account } = useAccount();
+  const account = useAccount();
   const { ownedCourse } = useOwnedCourse(course, account.data);
   const hasOwner = !!ownedCourse.data;
 

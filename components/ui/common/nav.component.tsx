@@ -8,7 +8,8 @@ import { usePathname } from "next/navigation";
 export default function Nav() {
   const [isOpen, setIsOpen] = useState(false);
   const { connect, isLoading, requireInstall } = useWeb3();
-  const { account } = useAccount();
+  const account = useAccount();
+  const { data, isAdmin, isInitialized, isEmpty } = account;
   const pathname = usePathname();
 
   return (
@@ -41,10 +42,8 @@ export default function Nav() {
               </ActiveLink>
               {isLoading ? (
                 <Button disabled={true}>Loading</Button>
-              ) : account.data && account.isInitialized ? (
-                <Button hoverable={false}>
-                  Hi there {account.isAdmin && "Admin"}
-                </Button>
+              ) : data && isInitialized ? (
+                <Button hoverable={false}>Hi there {isAdmin && "Admin"}</Button>
               ) : requireInstall ? (
                 <Button
                   onClick={() =>
@@ -82,10 +81,8 @@ export default function Nav() {
               </button>
               {isLoading ? (
                 <Button disabled={true}>Loading</Button>
-              ) : account.data && account.isInitialized ? (
-                <Button hoverable={false}>
-                  Hi there {account.isAdmin && "Admin"}
-                </Button>
+              ) : data && isInitialized ? (
+                <Button hoverable={false}>Hi there {isAdmin && "Admin"}</Button>
               ) : requireInstall ? (
                 <Button
                   onClick={() =>
@@ -127,12 +124,12 @@ export default function Nav() {
         </nav>
       </div>
       {!isOpen &&
-        account.data &&
-        account.isInitialized &&
+        data &&
+        isInitialized &&
         !pathname.includes("/marketplace") && (
-          <div className="hidden cm:flex justify-end  pt-1 sm:px-6 lg:px-8">
+          <div className="hidden cm:flex justify-end pt-1 sm:px-6 lg:px-8">
             <div className="text-white break-words text-sm bg-indigo-600 rounded-md p-2">
-              {account.data}
+              {data}
             </div>
           </div>
         )}
