@@ -5,3 +5,4 @@ export { default as CourseHero } from "./hero.component";
 export { default as CourseFilter } from "./course-filter.component";
 export { default as KeyPoints } from "./key-points.component";
 export { default as Curriculum } from "./curriculum.component";
+export { default as CourseMessage } from "./course-message.component";
