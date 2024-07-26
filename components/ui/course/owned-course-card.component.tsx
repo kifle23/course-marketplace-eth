@@ -1,7 +1,6 @@
 "use client";
 import {
   useAccount,
-  useManagedCourses,
   useOwnedCourses,
 } from "@components/hooks/web3";
 import { getAllCourses } from "@content/courses/fetcher";
@@ -11,7 +10,6 @@ import { Button, Message } from "@components/ui/common";
 import { useRouter } from "next/navigation";
 import { useWeb3 } from "@components/providers";
 import Link from "next/link";
-import { ReactNode, use } from "react";
 
 interface OwnedCourseCardProps {
   managed?: boolean;
@@ -29,9 +27,7 @@ export default function OwnedCourseCard({ managed }: OwnedCourseCardProps) {
   const account = useAccount();
   const { ownedCourses } = useOwnedCourses(courses, account.data);
   const router = useRouter();
-  const { managedCourses } = useManagedCourses(courses, account.data);
-  console.log("managedCourses: ", managedCourses.data);
-
+  
   return (
     <>
       {ownedCourses.isEmpty && (
@@ -73,6 +69,8 @@ export default function OwnedCourseCard({ managed }: OwnedCourseCardProps) {
                   src={course.coverImage}
                   layout="fill"
                   alt={course.title}
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                  priority
                 />
               </div>
               <div className="flex-4">

@@ -19,6 +19,8 @@ export default function EthRates() {
                   width="35"
                   src="/small-eth.webp"
                   alt=""
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                  priority
                 />
                 <span className="text-xl font-bold ml-2">{eth.data}$</span>
               </>
