@@ -1,5 +1,10 @@
 import { NotFound } from "@components/ui/common";
-import { Curriculum, CourseHero, KeyPoints, CourseMessage } from "@components/ui/course";
+import {
+  Curriculum,
+  CourseHero,
+  KeyPoints,
+  CourseMessage,
+} from "@components/ui/course";
 import { getAllCourses, getCourseBySlug } from "@content/courses/fetcher";
 
 interface CoursePageProps {
@@ -22,7 +27,7 @@ export default async function CoursePage({ params }: CoursePageProps) {
       </div>
       <KeyPoints points={course.wsl} />
       <CourseMessage course={course} />
-      <Curriculum locked={true} />
+      <Curriculum course={course} />
     </div>
   );
 }

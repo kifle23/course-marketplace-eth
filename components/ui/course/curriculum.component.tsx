@@ -1,10 +1,15 @@
+"use client";
+import { useAccount, useOwnedCourse } from "@components/hooks/web3";
+import { useWeb3 } from "@components/providers";
+import { Course } from "@content/courses/types";
+import { Loader } from "@components/ui/common";
 import Link from "next/link";
 
 interface CurriculumProps {
-  locked: boolean;
+  course: Course;
 }
 
-export default function Curriculum({ locked }: CurriculumProps) {
+export default function Curriculum({ course }: CurriculumProps) {
   const lectures = [
     "How to init App",
     "How to get a help",
@@ -13,6 +18,11 @@ export default function Curriculum({ locked }: CurriculumProps) {
     "How to write For Loops",
     "Safe operator",
   ];
+  const { isLoading } = useWeb3();
+  const { account } = useAccount();
+  const { ownedCourse } = useOwnedCourse(course, account.data);
+  const courseState = ownedCourse.data?.state;
+  const locked = courseState === "purchased" || courseState === "deactivated";
 
   return (
     <section className="max-w-5xl mx-auto">
@@ -64,12 +74,26 @@ export default function Curriculum({ locked }: CurriculumProps) {
                         </span>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                        <Link
-                          href="#"
-                          className="text-indigo-600 hover:text-indigo-900"
-                        >
-                          {locked ? "Get Access" : "Play"}
-                        </Link>
+                        {isLoading ? (
+                          <Loader />
+                        ) : locked ? (
+                          <>
+                            {courseState === "deactivated" && (
+                              <Link href="/marketplace" className="text-indigo-600 hover:text-indigo-900">
+                                  Get Access
+                              </Link>
+                            )}
+                            {courseState === "purchased" && (
+                              <Link href="/faq" className="text-yellow-500 hover:text-yellow-900">
+                                  Waiting for activation...
+                              </Link>
+                            )}
+                          </>
+                        ) : (
+                          <Link href="/watch" className="text-indigo-600 hover:text-indigo-900">
+                              Watch
+                          </Link>
+                        )}
                       </td>
                     </tr>
                   ))}
