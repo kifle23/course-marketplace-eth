@@ -1,4 +1,5 @@
 import { Course } from "@content/courses/types";
+import { createCourseHash } from "@utils/hash";
 import { normalizeOwnedCourse } from "@utils/normalize";
 import useSWR from "swr";
 import Web3 from "web3";
@@ -16,12 +17,7 @@ const fetchOwnedCourse = async (
   account: string,
   course: Course
 ) => {
-  const hexCourseId = web3.utils.toHex(course.id);
-  const courseIdBytes = web3.utils.padLeft(hexCourseId, 32);
-  const courseHash = web3.utils.soliditySha3(
-    { type: "bytes16", value: courseIdBytes },
-    { type: "address", value: account }
-  );
+  const courseHash = createCourseHash(web3)(course.id, account);
   const ownedCourse = await contract.methods.getCourseByHash(courseHash).call();
   if (ownedCourse.owner !== "0x0000000000000000000000000000000000000000") {
     const normalized = normalizeOwnedCourse(web3)(course, ownedCourse);
