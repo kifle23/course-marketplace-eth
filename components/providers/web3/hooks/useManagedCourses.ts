@@ -1,4 +1,5 @@
 import { Course } from "@content/courses/types";
+import { normalizeOwnedCourse } from "@utils/normalize";
 import useSWR from "swr";
 import Web3 from "web3";
 
@@ -9,9 +10,30 @@ interface UseManagedCoursesProps {
   account: string;
 }
 
-const fetchManagedCourses = async (web3: Web3, contract: any) => {
-  const ManagedCourses = [1, 2, 3, 4];
-  return ManagedCourses;
+const fetchManagedCourses = async (
+  web3: Web3,
+  contract: any,
+  courses: Course[]
+) => {
+  const managedCourses = [];
+  const courseCount = await contract.methods.getCourseCount().call();
+  for (let i = Number(courseCount) - 1; i >= 0; i--) {
+    const courseHash = await contract.methods.getCourseHashAtIndex(i).call();
+    const ownedCourse = await contract.methods
+      .getCourseByHash(courseHash)
+      .call();
+
+    if (ownedCourse) {
+      const normalized = normalizeOwnedCourse(web3)(
+        {
+          hash: courseHash,
+        } as Course,
+        ownedCourse
+      );
+      managedCourses.push(normalized);
+    }
+  }
+  return managedCourses;
 };
 
 export const ManagedCoursesHandler = ({
@@ -24,7 +46,7 @@ export const ManagedCoursesHandler = ({
 
   const swrRes = useSWR(
     shouldFetch ? `web3/managedCourses/${account}` : null,
-    () => fetchManagedCourses(web3!, contract)
+    () => fetchManagedCourses(web3!, contract, courses)
   );
 
   return swrRes;

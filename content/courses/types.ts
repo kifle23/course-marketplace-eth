@@ -14,6 +14,7 @@ export interface Course {
   ownedCourseId?: number;
   proof?: string;
   owned?: string;
+  hash?: string;
 }
 export interface CourseMap {
   [id: number]: Course & { index: number };
