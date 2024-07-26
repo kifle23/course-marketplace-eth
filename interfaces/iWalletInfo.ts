@@ -4,6 +4,7 @@ export interface Account {
     isAdmin: boolean;
     mutate: () => void;
     isInitialized: boolean;
+    isEmpty?: boolean;
   };
 }
 

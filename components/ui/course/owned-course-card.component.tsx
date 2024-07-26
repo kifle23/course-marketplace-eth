@@ -3,8 +3,10 @@ import { useAccount, useOwnedCourses } from "@components/hooks/web3";
 import { getAllCourses } from "@content/courses/fetcher";
 import { Course } from "@content/courses/types";
 import Image from "next/image";
-import { Button } from "@components/ui/common";
+import { Button, Message } from "@components/ui/common";
 import { useRouter } from "next/navigation";
+import { useWeb3 } from "@components/providers";
+import Link from "next/link";
 
 const STATE_COLORS = {
   purchased: "indigo",
@@ -13,6 +15,7 @@ const STATE_COLORS = {
 };
 
 export default function OwnedCourseCard() {
+  const { requireInstall } = useWeb3();
   const { data: courses } = getAllCourses();
   const { account } = useAccount();
   const { ownedCourses } = useOwnedCourses(courses, account.data);
@@ -20,6 +23,30 @@ export default function OwnedCourseCard() {
 
   return (
     <>
+      {ownedCourses.isEmpty && (
+        <div className="w-1/3">
+          <Message type="warning">
+            <div>You don&apos;t own any courses</div>
+            <Link href="/marketplace" className="font-normal hover:underline">
+              <i>Purchase Course</i>
+            </Link>
+          </Message>
+        </div>
+      )}
+      {account.isEmpty && (
+        <div className="w-1/3">
+          <Message type="warning">
+            <div>Please connect to Metamask</div>
+          </Message>
+        </div>
+      )}
+      {requireInstall && (
+        <div className="w-1/3">
+          <Message type="warning">
+            <div>Please install Metamask</div>
+          </Message>
+        </div>
+      )}
       {ownedCourses.data?.map((course: Course) => {
         const stateColor =
           STATE_COLORS[course.state as keyof typeof STATE_COLORS];
