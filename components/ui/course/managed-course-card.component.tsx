@@ -3,6 +3,7 @@ import { useAccount, useManagedCourses } from "@components/hooks/web3";
 import { getAllCourses } from "@content/courses/fetcher";
 import { Course } from "@content/courses/types";
 import { Button } from "@components/ui/common";
+import { useState } from "react";
 
 interface ItemProps {
   title: string;
@@ -22,6 +23,7 @@ function Item({ title, value, className }: ItemProps) {
 }
 
 export default function ManagedCourseCard() {
+  const [email, setEmail] = useState("");
   const { data: courses } = getAllCourses();
   const account = useAccount();
   const { managedCourses } = useManagedCourses(courses, account.data);
@@ -55,6 +57,13 @@ export default function ManagedCourseCard() {
           },
         ];
 
+        function verifyCourse(
+          email: string,
+          arg1: { hash: string | undefined; proof: string | undefined }
+        ) {
+          console.log(email, arg1.hash, arg1.proof);
+        }
+
         return (
           <div
             key={`${index}-${course.ownedCourseId}`}
@@ -72,13 +81,24 @@ export default function ManagedCourseCard() {
               <div className="bg-white px-4 py-5 sm:px-6">
                 <div className="flex mr-2 relative rounded-md">
                   <input
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
                     type="text"
                     name="account"
                     id="account"
                     className="w-96 focus:ring-indigo-500 shadow-md focus:border-indigo-500 block pl-7 p-4 sm:text-sm border-gray-300 rounded-md"
                     placeholder="0x2341ab..."
                   />
-                  <Button>Verify</Button>
+                  <Button
+                    onClick={() => {
+                      verifyCourse(email, {
+                        hash: course.hash,
+                        proof: course.proof,
+                      });
+                    }}
+                  >
+                    Verify
+                  </Button>
                 </div>
               </div>
             </div>
