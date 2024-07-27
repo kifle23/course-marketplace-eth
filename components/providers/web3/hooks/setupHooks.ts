@@ -18,6 +18,6 @@ export const SetupHooks = ({ web3, provider, contract }: setupHooksProps) => {
     useNetwork: createNetworkHook({ web3, provider }),
     useOwnedCourses: (courses: Course[], account: string) => createOwnedCoursesHook({ web3, contract, courses, account }),
     useOwnedCourse: (course: Course, account: string) => createOwnedCourseHook({ web3, contract, course, account }),
-    useManagedCourses: (courses: Course[], account: Account) => createManagedCoursesHook({ web3, contract, account }),
+    useManagedCourses: (account: Account) => createManagedCoursesHook({ web3, contract, account }),
   };
 };
