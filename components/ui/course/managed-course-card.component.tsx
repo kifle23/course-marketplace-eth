@@ -30,7 +30,7 @@ export default function ManagedCourseCard() {
   }>({});
   const { data: courses } = getAllCourses();
   const account = useAccount();
-  const { managedCourses } = useManagedCourses(courses, account.data);
+  const { managedCourses } = useManagedCourses(courses, account);
 
   function verifyCourse(
     email: string,

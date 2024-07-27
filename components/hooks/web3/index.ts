@@ -37,7 +37,7 @@ export const useOwnedCourse = (course: Course, account: string) => {
   return { ownedCourse: swrRes };
 };
 
-export const useManagedCourses = (courses: Course[], account: string) => {
+export const useManagedCourses = (courses: Course[], account: Account) => {
   const swrRes = enhanceHook(
     useWeb3Hooks((hooks) => hooks.useManagedCourses)(courses, account)
   );
