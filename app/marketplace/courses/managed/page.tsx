@@ -1,13 +1,13 @@
 import { MarketHeader } from "@components/ui/marketplace";
-import { CourseFilter, OwnedCourseCard } from "@components/ui/course";
+import { CourseFilter, ManagedCourseCard } from "@components/ui/course";
 
-export default function ManageCourses() {
+export default function ManagedCourses() {
   return (
     <>
       <MarketHeader />
       <CourseFilter />
       <section className="grid grid-cols-1">
-        <OwnedCourseCard managed={true}></OwnedCourseCard>
+        <ManagedCourseCard></ManagedCourseCard>
       </section>
     </>
   );
