@@ -32,7 +32,7 @@
     "**/*.tsx",
     ".next/types/**/*.ts",
     "migrations/1_marketplace_migration.js"
-  ],
+, "test/courseMarketplace.test.js"  ],
   "exclude": ["node_modules"]
 }
 
