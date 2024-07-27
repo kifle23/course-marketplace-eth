@@ -9,10 +9,10 @@ const TYPES: { [key: string]: string } = {
 
 interface MessageProps {
   children: React.ReactNode;
-  type: "success" | "warning" | "danger";
+  type?: "success" | "warning" | "danger";
 }
 
-export default function Message({ type, children }: MessageProps) {
+export default function Message({ type = "success", children }: MessageProps) {
   const [isDisplayed, setIsDisplayed] = useState(true);
 
   if (!isDisplayed) {
@@ -22,7 +22,7 @@ export default function Message({ type, children }: MessageProps) {
   const messageType = TYPES[type];
 
   return (
-    <div className={`bg-${messageType}-100 rounded-xl mb-3 max-w-5xl mx-auto`}>
+    <div className={`bg-${messageType}-100 rounded-xl mb-3`}>
       <div className="max-w-7xl mx-auto py-3 px-3 sm:px-3 lg:px-3">
         <div className="flex items-center justify-between flex-wrap">
           <div className="w-0 flex-1 flex items-center">

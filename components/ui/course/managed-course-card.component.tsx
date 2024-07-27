@@ -2,8 +2,9 @@
 import { useAccount, useManagedCourses } from "@components/hooks/web3";
 import { getAllCourses } from "@content/courses/fetcher";
 import { Course } from "@content/courses/types";
-import { Button } from "@components/ui/common";
+import { Button, Message } from "@components/ui/common";
 import { useState } from "react";
+import web3 from "web3";
 
 interface ItemProps {
   title: string;
@@ -24,9 +25,28 @@ function Item({ title, value, className }: ItemProps) {
 
 export default function ManagedCourseCard() {
   const [email, setEmail] = useState("");
+  const [proofedOwnership, setProofedOwnership] = useState<{
+    [key: string]: boolean;
+  }>({});
   const { data: courses } = getAllCourses();
   const account = useAccount();
   const { managedCourses } = useManagedCourses(courses, account.data);
+
+  function verifyCourse(
+    email: string,
+    arg1: { hash: string | undefined; proof: string | undefined }
+  ) {
+    const { hash, proof } = arg1;
+    const emailHash = web3.utils.sha3(email);
+    const proofToVerify = web3.utils.soliditySha3(
+      { t: "bytes32", v: emailHash },
+      { t: "bytes32", v: hash }
+    );
+
+    proofToVerify === proof
+      ? setProofedOwnership({ [hash?.toString() ?? ""]: true })
+      : setProofedOwnership({ [hash?.toString() ?? ""]: false });
+  }
 
   return (
     <>
@@ -56,13 +76,6 @@ export default function ManagedCourseCard() {
             className: "bg-gray-50",
           },
         ];
-
-        function verifyCourse(
-          email: string,
-          arg1: { hash: string | undefined; proof: string | undefined }
-        ) {
-          console.log(email, arg1.hash, arg1.proof);
-        }
 
         return (
           <div
@@ -100,6 +113,16 @@ export default function ManagedCourseCard() {
                     Verify
                   </Button>
                 </div>
+                {proofedOwnership[course.hash?.toString() ?? ""] && (
+                  <div className="mt-2">
+                    <Message>Ownership verified</Message>
+                  </div>
+                )}
+                {proofedOwnership[course.hash?.toString() ?? ""] === false && (
+                  <div className="mt-2">
+                    <Message type="danger">Ownership not verified</Message>
+                  </div>
+                )}
               </div>
             </div>
           </div>
