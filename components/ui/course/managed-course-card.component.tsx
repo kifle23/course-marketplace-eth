@@ -1,7 +1,7 @@
 "use client";
 import { useAccount, useManagedCourses } from "@components/hooks/web3";
 import { getAllCourses } from "@content/courses/fetcher";
-import { OwnedCourse } from "@content/courses/types";
+import { Course } from "@content/courses/types";
 import { Button } from "@components/ui/common";
 
 interface ItemProps {
@@ -28,38 +28,47 @@ export default function ManagedCourseCard() {
 
   return (
     <>
-      {managedCourses.data?.map((course: OwnedCourse, index: number) => {
+      {managedCourses.data?.map((course: Course, index: number) => {
+        const items = [
+          {
+            title: "Hash",
+            value: course.hash || "",
+            className: "bg-white",
+          },
+          {
+            title: "Course ID",
+            value:
+              (Number(course.ownedCourseId?.toString()) + 1).toString() || "",
+            className: "bg-gray-50",
+          },
+          { title: "Proof", value: course.proof || "", className: "bg-white" },
+          {
+            title: "Owner",
+            value: course.owner || "",
+            className: "bg-gray-50",
+          },
+          { title: "Price", value: course.price || "", className: "bg-white" },
+          {
+            title: "State",
+            value: course.state || "",
+            className: "bg-gray-50",
+          },
+        ];
+
         return (
           <div
-            key={`${index}-${course.id}`}
+            key={`${index}-${course.ownedCourseId}`}
             className="bg-white border shadow overflow-hidden sm:rounded-lg mb-3"
           >
             <div className="border-t border-gray-200">
-              <Item
-                title="Course ID"
-                value={course.id?.toString() || ""}
-                className="bg-gray-50"
-              />
-              <Item
-                title="Proof"
-                value={course.proof || ""}
-                className="bg-white"
-              />
-              <Item
-                title="Owner"
-                value={course.owner || ""}
-                className="bg-gray-50"
-              />
-              <Item
-                title="Price"
-                value={course.price || ""}
-                className="bg-white"
-              />
-              <Item
-                title="State"
-                value={course.state.toString() || ""}
-                className="bg-gray-50"
-              />
+              {items.map((item, itemIndex) => (
+                <Item
+                  key={itemIndex}
+                  title={item.title}
+                  value={item.value.toString()}
+                  className={item.className}
+                />
+              ))}
               <div className="bg-white px-4 py-5 sm:px-6">
                 <div className="flex mr-2 relative rounded-md">
                   <input
