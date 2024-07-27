@@ -8,7 +8,7 @@ export default function Marketplace() {
   return (
     <>
       <MarketHeader />
-      <CourseList courses={courses} useCustomCard={true} />
+      <CourseList courses={courses} displayPurchase={true} />
     </>
   );
 }
