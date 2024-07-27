@@ -1,3 +1,4 @@
+"use client";
 import { Breadcrumbs } from "@components/ui/common";
 import { EthRates, WalletBar } from "@components/ui/web3";
 
@@ -12,7 +13,7 @@ export default function Header() {
       value: "My Courses",
     },
     {
-      href: "/marketplace/courses/manage",
+      href: "/marketplace/courses/managed",
       value: "Manage Courses",
       requireAdmin: true,
     },

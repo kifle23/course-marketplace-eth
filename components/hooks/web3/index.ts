@@ -1,10 +1,35 @@
+import { useWeb3 } from "@components/providers";
 import { useWeb3Hooks } from "@components/providers/web3.component";
 import { Course } from "@content/courses/types";
 import { Account, Network } from "@interfaces/iWalletInfo";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
+
+interface UseAdminProps {
+  redirectTo: string;
+}
 
 export const useAccount = (): Account => {
   const swrRes = enhanceHook(useWeb3Hooks((hooks) => hooks.useAccount));
   return swrRes;
+};
+
+export const useAdmin = ({ redirectTo }: UseAdminProps) => {
+  const account = useAccount();
+  const { requireInstall } = useWeb3();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (
+      requireInstall ||
+      (account.isInitialized && !account.isAdmin) ||
+      account.isEmpty
+    ) {
+      router.push(redirectTo);
+    }
+  }, [account, requireInstall, router, redirectTo]);
+
+  return account;
 };
 
 export const useNetwork = (): Network => {
@@ -35,6 +60,13 @@ export const useOwnedCourse = (course: Course, account: string) => {
     useWeb3Hooks((hooks) => hooks.useOwnedCourse)(course, account)
   );
   return { ownedCourse: swrRes };
+};
+
+export const useManagedCourses = (account: Account) => {
+  const swrRes = enhanceHook(
+    useWeb3Hooks((hooks) => hooks.useManagedCourses)(account)
+  );
+  return { managedCourses: swrRes };
 };
 
 type Data = null | string | any[] | object;

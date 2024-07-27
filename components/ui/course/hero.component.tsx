@@ -75,10 +75,7 @@ export default function Hero({ course }: HeroProps) {
               src={course.coverImage}
               alt={course.title}
               fill
-              sizes="(max-width: 640px) 100vw,
-             (max-width: 768px) 100vw,
-             (max-width: 1024px) 100vw,
-             100vw"
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
               priority
             />
           </div>

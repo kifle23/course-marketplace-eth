@@ -47,12 +47,12 @@ export default function OwnedCourseCard() {
           </Message>
         </div>
       )}
-      {ownedCourses.data?.map((course: Course) => {
+      {ownedCourses.data?.map((course: Course, index: number) => {
         const stateColor =
           STATE_COLORS[course.state as keyof typeof STATE_COLORS];
         return (
           <div
-            key={course.id}
+            key={`${index}-${course.id}`}
             className="bg-white border shadow overflow-hidden sm:rounded-lg mb-3"
           >
             <div className="block sm:flex">
@@ -60,8 +60,10 @@ export default function OwnedCourseCard() {
                 <Image
                   className="object-cover"
                   src={course.coverImage}
-                  layout="fill"
+                  fill
                   alt={course.title}
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                  priority
                 />
               </div>
               <div className="flex-4">
@@ -98,7 +100,6 @@ export default function OwnedCourseCard() {
                       </dd>
                     </div>
                     <div className="bg-white px-4 py-5 sm:px-6">
-                      {" "}
                       <Button
                         onClick={() => router.push(`/course/${course.slug}`)}
                       >

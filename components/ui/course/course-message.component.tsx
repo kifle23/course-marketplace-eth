@@ -46,6 +46,10 @@ export default function CourseMessage({ course }: CourseMessageProps) {
       return null;
   }
 
-  return <Message type={messageType}>{messageContent}</Message>;
+  return (
+    <div className="max-w-5xl mx-auto">
+      <Message type={messageType}>{messageContent}</Message>
+    </div>
+  );
 }
 

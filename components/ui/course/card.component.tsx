@@ -86,7 +86,8 @@ export default function Card({ course, useCustomCard }: CardProps) {
             src={course.coverImage}
             alt={course.title}
             priority
-            layout="fill"
+            fill
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
           />
         </div>
         <div className="p-8 pb-4 flex flex-col justify-between w-full md:w-[50%]">
