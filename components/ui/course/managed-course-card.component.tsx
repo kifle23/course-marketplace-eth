@@ -1,7 +1,7 @@
 "use client";
 import { useAccount, useManagedCourses } from "@components/hooks/web3";
 import { getAllCourses } from "@content/courses/fetcher";
-import { Course } from "@content/courses/types";
+import { OwnedCourse } from "@content/courses/types";
 import { Button } from "@components/ui/common";
 
 interface ItemProps {
@@ -28,22 +28,37 @@ export default function ManagedCourseCard() {
 
   return (
     <>
-      {managedCourses.data?.map((course: Course, index: number) => {
+      {managedCourses.data?.map((course: OwnedCourse, index: number) => {
         return (
           <div
-            key={`${index}-${course.ownedCourseId}`}
+            key={`${index}-${course.id}`}
             className="bg-white border shadow overflow-hidden sm:rounded-lg mb-3"
           >
             <div className="border-t border-gray-200">
               <Item
                 title="Course ID"
-                value={course.ownedCourseId?.toString() || ""}
+                value={course.id?.toString() || ""}
                 className="bg-gray-50"
               />
               <Item
                 title="Proof"
                 value={course.proof || ""}
                 className="bg-white"
+              />
+              <Item
+                title="Owner"
+                value={course.owner || ""}
+                className="bg-gray-50"
+              />
+              <Item
+                title="Price"
+                value={course.price || ""}
+                className="bg-white"
+              />
+              <Item
+                title="State"
+                value={course.state.toString() || ""}
+                className="bg-gray-50"
               />
               <div className="bg-white px-4 py-5 sm:px-6">
                 <div className="flex mr-2 relative rounded-md">

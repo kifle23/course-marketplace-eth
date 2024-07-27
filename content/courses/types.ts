@@ -13,7 +13,7 @@ export interface Course {
   price?: string;
   ownedCourseId?: number;
   proof?: string;
-  owned?: string;
+  Owner?: string;
   hash?: string;
 }
 export interface CourseMap {
