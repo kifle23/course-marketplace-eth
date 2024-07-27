@@ -14,7 +14,6 @@ export default function EthRates() {
             {eth.data ? (
               <>
                 <Image
-                  layout="fixed"
                   height="35"
                   width="35"
                   src="/small-eth.webp"
@@ -39,13 +38,7 @@ export default function EthRates() {
             {eth.data ? (
               <>
                 <span className="text-xl font-bold">{eth.perItem}</span>
-                <Image
-                  layout="fixed"
-                  height="35"
-                  width="35"
-                  src="/small-eth.webp"
-                  alt=""
-                />
+                <Image height="35" width="35" src="/small-eth.webp" alt="" />
                 <span className="text-xl font-bold ml-2">
                   = {COURSE_PRICE}$
                 </span>

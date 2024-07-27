@@ -1,8 +1,5 @@
 "use client";
-import {
-  useAccount,
-  useOwnedCourses,
-} from "@components/hooks/web3";
+import { useAccount, useOwnedCourses } from "@components/hooks/web3";
 import { getAllCourses } from "@content/courses/fetcher";
 import { Course } from "@content/courses/types";
 import Image from "next/image";
@@ -11,23 +8,19 @@ import { useRouter } from "next/navigation";
 import { useWeb3 } from "@components/providers";
 import Link from "next/link";
 
-interface OwnedCourseCardProps {
-  managed?: boolean;
-}
-
 const STATE_COLORS = {
   purchased: "indigo",
   activated: "green",
   deactivated: "red",
 };
 
-export default function OwnedCourseCard({ managed }: OwnedCourseCardProps) {
+export default function OwnedCourseCard() {
   const { requireInstall } = useWeb3();
   const { data: courses } = getAllCourses();
   const account = useAccount();
   const { ownedCourses } = useOwnedCourses(courses, account.data);
   const router = useRouter();
-  
+
   return (
     <>
       {ownedCourses.isEmpty && (
@@ -54,12 +47,12 @@ export default function OwnedCourseCard({ managed }: OwnedCourseCardProps) {
           </Message>
         </div>
       )}
-      {ownedCourses.data?.map((course: Course) => {
+      {ownedCourses.data?.map((course: Course, index: number) => {
         const stateColor =
           STATE_COLORS[course.state as keyof typeof STATE_COLORS];
         return (
           <div
-            key={course.id}
+            key={`${index}-${course.id}`}
             className="bg-white border shadow overflow-hidden sm:rounded-lg mb-3"
           >
             <div className="block sm:flex">
@@ -67,7 +60,7 @@ export default function OwnedCourseCard({ managed }: OwnedCourseCardProps) {
                 <Image
                   className="object-cover"
                   src={course.coverImage}
-                  layout="fill"
+                  fill
                   alt={course.title}
                   sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                   priority
@@ -107,24 +100,11 @@ export default function OwnedCourseCard({ managed }: OwnedCourseCardProps) {
                       </dd>
                     </div>
                     <div className="bg-white px-4 py-5 sm:px-6">
-                      {managed ? (
-                        <div className="flex mr-2 relative rounded-md">
-                          <input
-                            type="text"
-                            name="account"
-                            id="account"
-                            className="w-96 focus:ring-indigo-500 shadow-md focus:border-indigo-500 block pl-7 p-4 sm:text-sm border-gray-300 rounded-md"
-                            placeholder="0x2341ab..."
-                          />
-                          <Button>Verify</Button>
-                        </div>
-                      ) : (
-                        <Button
-                          onClick={() => router.push(`/course/${course.slug}`)}
-                        >
-                          Watch the course
-                        </Button>
-                      )}
+                      <Button
+                        onClick={() => router.push(`/course/${course.slug}`)}
+                      >
+                        Watch the course
+                      </Button>
                     </div>
                   </dl>
                 </div>
