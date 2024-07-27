@@ -1,3 +1,4 @@
+"use client";
 import { Breadcrumbs } from "@components/ui/common";
 import { EthRates, WalletBar } from "@components/ui/web3";
 

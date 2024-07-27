@@ -8,3 +8,4 @@ export { default as KeyPoints } from "./key-points.component";
 export { default as Curriculum } from "./curriculum.component";
 export { default as CourseMessage } from "./course-message.component";
 export { default as VerificationInput } from "./verification-input.component";
+export { default as ManageWrapper } from "./managed.component";
