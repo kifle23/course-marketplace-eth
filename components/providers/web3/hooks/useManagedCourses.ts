@@ -6,14 +6,12 @@ import Web3 from "web3";
 interface UseManagedCoursesProps {
   web3: Web3 | null;
   contract: any;
-  courses: Course[];
   account: string;
 }
 
 const fetchManagedCourses = async (
   web3: Web3,
   contract: any,
-  courses: Course[]
 ) => {
   const managedCourses = [];
   const courseCount = await contract.methods.getCourseCount().call();
@@ -39,14 +37,13 @@ const fetchManagedCourses = async (
 export const ManagedCoursesHandler = ({
   web3,
   contract,
-  courses,
   account,
 }: UseManagedCoursesProps) => {
   const shouldFetch = web3 && contract && account;
 
   const swrRes = useSWR(
     shouldFetch ? `web3/managedCourses/${account}` : null,
-    () => fetchManagedCourses(web3!, contract, courses)
+    () => fetchManagedCourses(web3!, contract)
   );
 
   return swrRes;
