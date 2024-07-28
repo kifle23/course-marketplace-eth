@@ -1,4 +1,5 @@
 const CourseMarketplace = artifacts.require('CourseMarketplace');
+const { catchRevert } = require('./utils/exceptions');
 
 // Mocha - testing framework
 // Chai - assertion JS library
@@ -55,13 +56,7 @@ contract('CourseMarketplace', accounts => {
     describe("Activate the purchased course", () => {
 
         it("should NOT be able to activate course by NOT contract owner", async () => {
-            try {
-                await _contract.activateCourse(courseHash, {
-                    from: buyer
-                });
-            } catch (error) {
-                assert(error, "Expected an error but did not get one");
-            }
+            await catchRevert(_contract.activateCourse(courseHash, { from: buyer }));
         });
 
         it("should have 'activated' state", async () => {
