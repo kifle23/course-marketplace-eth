@@ -31,7 +31,9 @@
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts",
-    "migrations/1_marketplace_migration.js"
+    "migrations/1_marketplace_migration.js",
+    "test/courseMarketplace.test.js",
+    "test/utils/exceptions.js"
   ],
   "exclude": ["node_modules"]
 }

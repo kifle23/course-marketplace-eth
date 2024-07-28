@@ -10,7 +10,7 @@ import { useWeb3 } from "@components/providers";
 
 interface CardProps {
   course: Course;
-  useCustomCard?: boolean;
+  displayPurchase?: boolean;
 }
 
 interface Order {
@@ -19,7 +19,7 @@ interface Order {
   confirmationEmail: string;
 }
 
-export default function Card({ course, useCustomCard }: CardProps) {
+export default function Card({ course, displayPurchase }: CardProps) {
   const { web3, contract } = useWeb3();
   const [selectedCourse, setSelectedCourse] = useState<Course | null>(null);
   const { canPurchase, account } = useWalletInfo();
@@ -105,7 +105,7 @@ export default function Card({ course, useCustomCard }: CardProps) {
               {course.description.substring(0, 70)}...
             </p>
           </div>
-          {useCustomCard && (
+          {displayPurchase && (
             <div className="mt-4">
               <Button
                 variant="light"
