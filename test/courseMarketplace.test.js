@@ -54,13 +54,20 @@ contract('CourseMarketplace', accounts => {
 
     describe("Activate the purchased course", () => {
 
-        before(async () => {
-            await _contract.activateCourse(courseHash, {
-                from: owner
-            });
+        it("should NOT be able to activate course by NOT contract owner", async () => {
+            try {
+                await _contract.activateCourse(courseHash, {
+                    from: buyer
+                });
+            } catch (error) {
+                assert(error, "Expected an error but did not get one");
+            }
         });
 
         it("should have 'activated' state", async () => {
+            await _contract.activateCourse(courseHash, {
+                from: owner
+            });
             const course = await _contract.getCourseByHash(courseHash);
             const exptectedState = 1;
 
