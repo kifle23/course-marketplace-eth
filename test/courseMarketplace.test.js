@@ -1,5 +1,8 @@
 const CourseMarketplace = artifacts.require('CourseMarketplace');
 
+// Mocha - testing framework
+// Chai - assertion JS library
+
 contract('CourseMarketplace', accounts => {
 
     const courseId = "0x00000000000000000000000000003130";
@@ -17,7 +20,7 @@ contract('CourseMarketplace', accounts => {
     });
 
     describe("Purchase the new course", () => {
-
+        let courseHash = null;
         before(async () => {
             await _contract.purchaseCourse(courseId, proof, {
                 from: buyer,
@@ -34,6 +37,18 @@ contract('CourseMarketplace', accounts => {
             );
 
             assert.equal(courseHash, expectedHash, "Course hash is not maching the hash of purchased course!");
+        });
+
+        it("should match the data of the course purchased by buyer", async () => {
+            const exptectedIndex = 0;
+            const exptectedState = 0;
+            const course = await _contract.getCourseByHash(courseHash);
+
+            assert.equal(course.id, exptectedIndex, "Course index should be 0!");
+            assert.equal(course.price, value, `Course price should be ${value}!`);
+            assert.equal(course.proof, proof, `Course proof should be ${proof}!`);
+            assert.equal(course.owner, buyer, `Course buyer should be ${buyer}!`);
+            assert.equal(course.state, exptectedState, `Course state should be ${exptectedState}!`);
         });
     });
 });
