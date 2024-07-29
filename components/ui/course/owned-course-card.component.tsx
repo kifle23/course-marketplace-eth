@@ -9,9 +9,18 @@ import { useWeb3 } from "@components/providers";
 import Link from "next/link";
 
 const STATE_COLORS = {
-  purchased: "indigo",
-  activated: "green",
-  deactivated: "red",
+  purchased: {
+    text: "text-indigo-700",
+    bg: "bg-indigo-200",
+  },
+  activated: {
+    text: "text-green-700",
+    bg: "bg-green-200",
+  },
+  deactivated: {
+    text: "text-red-700",
+    bg: "bg-red-200",
+  },
 };
 
 export default function OwnedCourseCard() {
@@ -71,7 +80,7 @@ export default function OwnedCourseCard() {
                   <h3 className="text-lg leading-6 font-medium text-gray-900">
                     <span className="mr-2">{course.title}</span>
                     <span
-                      className={`text-xs text-[${stateColor}-700] bg-[${stateColor}-200] rounded-full p-2`}
+                      className={`text-xs ${stateColor.text} ${stateColor.bg} rounded-full p-2`}
                     >
                       {course.state}
                     </span>
