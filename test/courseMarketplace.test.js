@@ -10,6 +10,9 @@ contract('CourseMarketplace', accounts => {
     const proof = "0x0000000000000000000000000000313000000000000000000000000000003130";
     const value = "900000000";
 
+    const courseId2 = "0x00000000000000000000000000002130";
+    const proof2 = "0x0000000000000000000000000000213000000000000000000000000000002130";
+
     let _contract = null;
     let contractOwner = null;
     let buyer = null;
@@ -106,6 +109,37 @@ contract('CourseMarketplace', accounts => {
             await _contract.transferOwnership(contractOwner, { from: accounts[2] })
             const owner = await _contract.getContractOwner()
             assert.equal(owner, contractOwner, "Contract owner is not set!")
+        });
+    });
+
+    describe("Deactivate course", () => {
+        let courseHash2 = null;
+        let currentOwner = null;
+
+        before(async () => {
+            await _contract.purchaseCourse(courseId2, proof2, { from: buyer, value });
+            courseHash2 = await _contract.getCourseHashAtIndex(1);
+            currentOwner = await _contract.getContractOwner();
+        });
+
+        it("should NOT be able to deactivate the course by NOT contract owner", async () => {
+            await catchRevert(_contract.deactivateCourse(courseHash2, { from: buyer }));
+        });
+
+
+        it("should have status of deactivated and price 0", async () => {
+            await _contract.deactivateCourse(courseHash2, { from: contractOwner });
+            const course = await _contract.getCourseByHash(courseHash2);
+            const exptectedState = 2;
+            const exptectedPrice = 0;
+
+            assert.equal(course.state, exptectedState, "Course is NOT deactivated!");
+            assert.equal(course.price, exptectedPrice, "Course price is not 0!");
+        });
+
+
+        it("should NOT be able to activate deactivated course", async () => {
+            await catchRevert(_contract.activateCourse(courseHash2, { from: contractOwner }));
         });
     });
 });
