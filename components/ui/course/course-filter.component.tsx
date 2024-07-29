@@ -14,7 +14,10 @@ export default function CourseFilter() {
         <Button className="ml-2 md:ml-0 mt-2 md:mt-0">Search</Button>
       </div>
       <div className="relative text-gray-700 w-full md:w-auto">
-        <select className="w-full md:w-72 h-10 pl-3 pr-6 text-base placeholder-gray-600 border rounded-lg appearance-none focus:shadow-outline">
+        <select
+          name="select"
+          className="w-full md:w-72 h-10 pl-3 pr-6 text-base placeholder-gray-600 border rounded-lg appearance-none focus:shadow-outline"
+        >
           <option>A regular sized select input</option>
           <option>Another option</option>
           <option>And one more</option>
