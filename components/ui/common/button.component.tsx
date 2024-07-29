@@ -1,7 +1,14 @@
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   children: React.ReactNode;
   className?: string;
-  variant?: "primary" | "secondary" | "light" | "danger" | "white";
+  variant?:
+    | "primary"
+    | "secondary"
+    | "light"
+    | "danger"
+    | "white"
+    | "green"
+    | "red";
   hoverable?: boolean;
 }
 
@@ -28,6 +35,12 @@ export default function Button({
     white: `text-indigo-600 bg-white border border-indigo-600 ${
       hoverable && "hover:bg-indigo-50"
     } ${hoverable ? "cursor-pointer" : "cursor-default"}`,
+    green: `text-white bg-green-600 ${hoverable && "hover:bg-green-700"} ${
+      hoverable ? "cursor-pointer" : "cursor-default"
+    }`,
+    red: `text-white bg-red-600 ${hoverable && "hover:bg-red-700"} ${
+      hoverable ? "cursor-pointer" : "cursor-default"
+    }`,
   };
 
   return (
