@@ -75,6 +75,38 @@ export default function Card({ course, displayPurchase }: CardProps) {
     await retryPurchase(3);
   };
 
+  const renderButton = () => {
+    if (requireInstall) {
+      return (
+        <Button variant="light" disabled={true}>
+          Install
+        </Button>
+      );
+    }
+
+    if (isConnecting) {
+      return (
+        <Button variant="light" disabled={true}>
+          <Loader size="sm" />
+        </Button>
+      );
+    }
+
+    if (displayPurchase) {
+      return (
+        <Button
+          variant="light"
+          disabled={!hasConnectedWallet}
+          onClick={() => setSelectedCourse(course)}
+        >
+          Purchase
+        </Button>
+      );
+    }
+
+    return null;
+  };
+
   return (
     <div className="bg-white rounded-xl shadow-md overflow-hidden md:max-w-2xl">
       <div className="flex flex-col md:flex-row h-full">
@@ -105,27 +137,7 @@ export default function Card({ course, displayPurchase }: CardProps) {
               {course.description.substring(0, 70)}...
             </p>
           </div>
-          <div className="mt-4">
-            {requireInstall && (
-              <Button variant="light" disabled={true}>
-                Install
-              </Button>
-            )}
-            {!requireInstall && isConnecting && (
-              <Button variant="light" disabled={true}>
-                <Loader size="sm" />
-              </Button>
-            )}
-            {!isConnecting && displayPurchase && (
-              <Button
-                variant="light"
-                disabled={!hasConnectedWallet}
-                onClick={() => setSelectedCourse(course)}
-              >
-                Purchase
-              </Button>
-            )}
-          </div>
+          <div className="mt-4">{renderButton()}</div>
           <OrderModal
             course={selectedCourse}
             onSubmit={purchaseCourse}
