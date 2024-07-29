@@ -55,6 +55,24 @@ export default function ManageWrapper() {
     }
   };
 
+  const deactivateCourse = async ({
+    courseHash,
+  }: {
+    courseHash: string | undefined;
+  }) => {
+    if (!courseHash) {
+      return;
+    }
+    try {
+      await contract.methods.deactivateCourse(courseHash).send({
+        from: account.data,
+        gas: 200000,
+      });
+    } catch (e) {
+      console.error((e as Error).message);
+    }
+  };
+
   if (!account.isAdmin) return null;
 
   return (
@@ -93,7 +111,14 @@ export default function ManageWrapper() {
                   >
                     Activate
                   </Button>
-                  <Button variant="red">Deactivate</Button>
+                  <Button
+                    onClick={() =>
+                      deactivateCourse({ courseHash: course.hash })
+                    }
+                    variant="red"
+                  >
+                    Deactivate
+                  </Button>
                 </div>
               )}
             </div>
