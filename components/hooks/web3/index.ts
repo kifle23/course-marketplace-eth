@@ -41,10 +41,13 @@ export const useWalletInfo = () => {
   const account = useAccount();
   const network = useNetwork();
 
+  const isConnecting = !account.isInitialized && !network.isInitialized;
+
   return {
     account,
     network,
-    canPurchase: !!(account.data && network.isSupported),
+    isConnecting,
+    hasConnectedWallet: !!(account.data && network.isSupported),
   };
 };
 
