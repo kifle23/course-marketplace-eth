@@ -14,6 +14,7 @@ export default function ManageWrapper() {
   const [proofedOwnership, setProofedOwnership] = useState<{
     [key: string]: boolean;
   }>({});
+  type ContractMethod = "activateCourse" | "deactivateCourse";
 
   function verifyCourse(
     email: string,
@@ -37,22 +38,31 @@ export default function ManageWrapper() {
         });
   }
 
+  const changeCourseState = async (
+    courseHash: string,
+    method: ContractMethod
+  ): Promise<any> => {
+    if (!account.data || !courseHash) {
+      return;
+    }
+
+    try {
+      const result = await contract.methods[method](courseHash).send({
+        from: account.data,
+      });
+
+      return result;
+    } catch (e: any) {
+      throw new Error(e.message);
+    }
+  };
+
   const activateCourse = async ({
     courseHash,
   }: {
     courseHash: string | undefined;
   }) => {
-    if (!courseHash) {
-      return;
-    }
-    try {
-      await contract.methods.activateCourse(courseHash).send({
-        from: account.data,
-        gas: 200000,
-      });
-    } catch (e) {
-      console.error((e as Error).message);
-    }
+    changeCourseState(courseHash ?? "", "activateCourse");
   };
 
   const deactivateCourse = async ({
@@ -60,17 +70,7 @@ export default function ManageWrapper() {
   }: {
     courseHash: string | undefined;
   }) => {
-    if (!courseHash) {
-      return;
-    }
-    try {
-      await contract.methods.deactivateCourse(courseHash).send({
-        from: account.data,
-        gas: 200000,
-      });
-    } catch (e) {
-      console.error((e as Error).message);
-    }
+    changeCourseState(courseHash ?? "", "deactivateCourse");
   };
 
   if (!account.isAdmin) return null;
