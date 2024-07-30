@@ -19,6 +19,21 @@ interface Order {
   confirmationEmail: string;
 }
 
+const STATE_COLORS = {
+  purchased: {
+    text: "text-indigo-700",
+    bg: "bg-indigo-200",
+  },
+  activated: {
+    text: "text-green-700",
+    bg: "bg-green-200",
+  },
+  deactivated: {
+    text: "text-red-700",
+    bg: "bg-red-200",
+  },
+};
+
 export default function Card({ course, displayPurchase }: CardProps) {
   const { web3, contract, requireInstall } = useWeb3();
   const [selectedCourse, setSelectedCourse] = useState<Course | null>(null);
@@ -96,9 +111,11 @@ export default function Card({ course, displayPurchase }: CardProps) {
 
     if (hasOwner) {
       return (
-        <Button variant="green" disabled={true}>
-          Owned
-        </Button>
+        <>
+          <Button disabled={true} variant="green">
+            Owned
+          </Button>
+        </>
       );
     }
 
@@ -117,6 +134,10 @@ export default function Card({ course, displayPurchase }: CardProps) {
     return null;
   };
 
+  const stateColor = ownedCourse.data
+    ? STATE_COLORS[ownedCourse.data.state as keyof typeof STATE_COLORS]
+    : null;
+
   return (
     <div className="bg-white rounded-xl shadow-md overflow-hidden md:max-w-2xl">
       <div className="flex flex-col md:flex-row h-full">
@@ -134,8 +155,19 @@ export default function Card({ course, displayPurchase }: CardProps) {
         </div>
         <div className="p-8 pb-4 flex flex-col justify-between w-full md:w-[50%]">
           <div>
-            <div className="uppercase tracking-wide text-sm text-indigo-500 font-semibold">
-              {course.type}
+            <div className="flex items-center space-x-2">
+              <span className="uppercase tracking-wide text-sm text-indigo-500 font-semibold">
+                {course.type}
+              </span>
+              {hasOwner && stateColor && (
+                <span
+                  className={`text-xs ${stateColor.text} ${stateColor.bg} rounded-full p-2`}
+                >
+                  {ownedCourse.data.state === "purchased"
+                    ? "Waiting for activation"
+                    : ownedCourse.data.state}
+                </span>
+              )}
             </div>
             <Link
               href={`/course/${course.slug}`}
