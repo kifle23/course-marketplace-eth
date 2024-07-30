@@ -4,7 +4,7 @@ import { Course } from "@content/courses/types";
 import Link from "next/link";
 import { Button, Loader } from "@components/ui/common";
 import { useState } from "react";
-import { useWalletInfo } from "@components/hooks/web3";
+import { useOwnedCourse, useWalletInfo } from "@components/hooks/web3";
 import { OrderModal } from "@components/ui/order";
 import { useWeb3 } from "@components/providers";
 
@@ -23,6 +23,8 @@ export default function Card({ course, displayPurchase }: CardProps) {
   const { web3, contract, requireInstall } = useWeb3();
   const [selectedCourse, setSelectedCourse] = useState<Course | null>(null);
   const { hasConnectedWallet, isConnecting, account } = useWalletInfo();
+  const { ownedCourse } = useOwnedCourse(course, account.data);
+  const hasOwner = !!ownedCourse.data;
 
   const convertCourseIdToBytes16 = (courseId: number, web3: any): string => {
     const hexString = web3.utils.toHex(courseId);
@@ -88,6 +90,14 @@ export default function Card({ course, displayPurchase }: CardProps) {
       return (
         <Button variant="light" disabled={true}>
           <Loader size="sm" />
+        </Button>
+      );
+    }
+
+    if (hasOwner) {
+      return (
+        <Button variant="green" disabled={true}>
+          Owned
         </Button>
       );
     }
