@@ -37,7 +37,8 @@ const STATE_COLORS = {
 export default function Card({ course, displayPurchase }: CardProps) {
   const { web3, contract, requireInstall } = useWeb3();
   const [selectedCourse, setSelectedCourse] = useState<Course | null>(null);
-  const { hasConnectedWallet, isConnecting, account } = useWalletInfo();
+  const { hasConnectedWallet, isConnecting, account, network } =
+    useWalletInfo();
   const { ownedCourse } = useOwnedCourse(course, account.data);
   const hasOwner = !!ownedCourse.data;
 
@@ -109,7 +110,7 @@ export default function Card({ course, displayPurchase }: CardProps) {
       );
     }
 
-    if (hasOwner) {
+    if (network.isSupported && hasOwner) {
       return (
         <>
           <Button disabled={true} variant="green">
@@ -159,7 +160,7 @@ export default function Card({ course, displayPurchase }: CardProps) {
               <span className="uppercase tracking-wide text-sm text-indigo-500 font-semibold">
                 {course.type}
               </span>
-              {hasOwner && stateColor && (
+              {network.isSupported && hasOwner && stateColor && (
                 <span
                   className={`text-xs ${stateColor.text} ${stateColor.bg} rounded-full p-2`}
                 >

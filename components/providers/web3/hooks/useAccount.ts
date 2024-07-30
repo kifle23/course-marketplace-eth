@@ -37,8 +37,10 @@ export const AccountHandler = ({
   useEffect(() => {
     if (!provider) return;
 
-    const handleAccountsChanged = (accounts: string[]) =>
+    const handleAccountsChanged = (accounts: string[]) => {
       mutate(accounts[0] ?? null);
+      window.location.reload();
+    };
 
     provider.on("accountsChanged", handleAccountsChanged);
 
