@@ -115,8 +115,13 @@ export default function Card({ course, displayPurchase }: CardProps) {
       if (network.isSupported && hasOwner) {
         return (
           <div className="flex">
-            <Button disabled={true} variant="green" className="mr-2" size="sm">
-              Owned
+            <Button
+              variant="white"
+              hoverable={false}
+              className="mr-2"
+              size="sm"
+            >
+              Yours &#10004;
             </Button>
             {ownedCourse.data.state === "deactivated" && (
               <Button
