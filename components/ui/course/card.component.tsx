@@ -7,6 +7,7 @@ import { useState } from "react";
 import { useOwnedCourse, useWalletInfo } from "@components/hooks/web3";
 import { OrderModal } from "@components/ui/order";
 import { useWeb3 } from "@components/providers";
+import { AnimateKeyframes } from "react-simple-animate";
 
 interface CardProps {
   course: Course;
@@ -21,15 +22,15 @@ interface Order {
 
 const STATE_COLORS = {
   purchased: {
-    text: "text-indigo-700",
-    bg: "bg-indigo-200",
+    text: "text-indigo-500",
+    bg: "bg-yellow-200",
   },
   activated: {
-    text: "text-green-700",
+    text: "text-green-500",
     bg: "bg-green-200",
   },
   deactivated: {
-    text: "text-red-700",
+    text: "text-red-500",
     bg: "bg-red-200",
   },
 };
@@ -110,26 +111,34 @@ export default function Card({ course, displayPurchase }: CardProps) {
       );
     }
 
-    if (network.isSupported && hasOwner) {
-      return (
-        <>
-          <Button disabled={true} variant="green">
-            Owned
-          </Button>
-        </>
-      );
-    }
-
     if (displayPurchase) {
-      return (
-        <Button
-          variant="light"
-          disabled={!hasConnectedWallet}
-          onClick={() => setSelectedCourse(course)}
-        >
-          Purchase
-        </Button>
-      );
+      if (network.isSupported && hasOwner) {
+        return (
+          <div className="flex">
+            <Button disabled={true} variant="green" className="mr-1">
+              Owned
+            </Button>
+            {ownedCourse.data.state === "deactivated" && (
+              <Button
+                variant="primary"
+                onClick={() => alert("Reactivating!!!")}
+              >
+                Reactivate
+              </Button>
+            )}
+          </div>
+        );
+      } else {
+        return (
+          <Button
+            variant="light"
+            disabled={!hasConnectedWallet}
+            onClick={() => setSelectedCourse(course)}
+          >
+            Purchase
+          </Button>
+        );
+      }
     }
 
     return null;
@@ -160,15 +169,27 @@ export default function Card({ course, displayPurchase }: CardProps) {
               <span className="uppercase tracking-wide text-sm text-indigo-500 font-semibold">
                 {course.type}
               </span>
-              {network.isSupported && hasOwner && stateColor && (
-                <span
-                  className={`text-xs ${stateColor.text} ${stateColor.bg} rounded-full p-2`}
-                >
-                  {ownedCourse.data.state === "purchased"
-                    ? "Waiting for activation"
-                    : ownedCourse.data.state}
-                </span>
-              )}
+              {network.isSupported &&
+                displayPurchase &&
+                hasOwner &&
+                stateColor && (
+                  <span
+                    className={`text-xs ${stateColor.text} ${stateColor.bg} font-semibold rounded-full p-2`}
+                  >
+                    {ownedCourse.data.state === "purchased" ? (
+                      <AnimateKeyframes
+                        play
+                        duration={2}
+                        keyframes={["opacity: 0.2", "opacity: 1"]}
+                        iterationCount="infinite"
+                      >
+                        pending
+                      </AnimateKeyframes>
+                    ) : (
+                      ownedCourse.data.state
+                    )}
+                  </span>
+                )}
             </div>
             <Link
               href={`/course/${course.slug}`}
