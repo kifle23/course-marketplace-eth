@@ -38,6 +38,7 @@ const STATE_COLORS = {
 export default function Card({ course, displayPurchase }: CardProps) {
   const { web3, contract, requireInstall } = useWeb3();
   const [selectedCourse, setSelectedCourse] = useState<Course | null>(null);
+  const [isNewPurchase, setIsNewPurchase] = useState(true);
   const { hasConnectedWallet, isConnecting, account, network } =
     useWalletInfo();
   const { ownedCourse } = useOwnedCourse(course, account.data);
@@ -126,7 +127,10 @@ export default function Card({ course, displayPurchase }: CardProps) {
             {ownedCourse.data.state === "deactivated" && (
               <Button
                 variant="primary"
-                onClick={() => alert("Reactivating!!!")}
+                onClick={() => {
+                  setIsNewPurchase(false);
+                  setSelectedCourse(course);
+                }}
                 size="sm"
               >
                 Reactivate
@@ -212,7 +216,11 @@ export default function Card({ course, displayPurchase }: CardProps) {
           <OrderModal
             course={selectedCourse}
             onSubmit={purchaseCourse}
-            onClose={() => setSelectedCourse(null)}
+            isNewPurchase={isNewPurchase}
+            onClose={() => {
+              setSelectedCourse(null);
+              setIsNewPurchase(true);
+            }}
           />
         </div>
       </div>
