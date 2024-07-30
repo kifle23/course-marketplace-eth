@@ -70,18 +70,19 @@ export default function Card({ course, displayPurchase }: CardProps) {
           { type: "bytes16", value: courseIdBytes },
           { type: "address", value: account.data }
         );
-        const emailHash = web3.utils.sha3(order.email);
-        const proof = web3.utils.soliditySha3(
-          { type: "bytes32", value: emailHash },
-          { type: "bytes32", value: orderHash }
-        );
+        const value = web3.utils.toWei(order.price, "ether");
 
-        await contract.methods.purchaseCourse(courseIdBytes, proof).send({
-          from: account.data,
-          value: web3.utils.toWei(order.price, "ether"),
-        });
+        if (isNewPurchase) {
+          const emailHash = web3.utils.sha3(order.email);
+          const proof = web3.utils.soliditySha3(
+            { type: "bytes32", value: emailHash },
+            { type: "bytes32", value: orderHash }
+          );
 
-        console.log("Course purchased successfully");
+          _purchaseCourse(courseIdBytes, proof, value);
+        } else {
+          _repurchaseCourse(orderHash, value);
+        }
       } catch (error) {
         console.clear();
         console.error(
@@ -93,6 +94,26 @@ export default function Card({ course, displayPurchase }: CardProps) {
     };
 
     await retryPurchase(3);
+  };
+
+  const _purchaseCourse = async (
+    courseIdBytes: string,
+    proof: any,
+    value: any
+  ) => {
+    await contract.methods.purchaseCourse(courseIdBytes, proof).send({
+      from: account.data,
+      value: value,
+    });
+    console.log("Course purchased successfully!");
+  };
+
+  const _repurchaseCourse = async (orderHash: any, value: any) => {
+    await contract.methods.repurchaseCourse(orderHash).send({
+      from: account.data,
+      value: value,
+    });
+    console.log("Course repurchased successfully!");
   };
 
   const renderButton = () => {
