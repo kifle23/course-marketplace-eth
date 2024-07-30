@@ -97,7 +97,7 @@ export default function Card({ course, displayPurchase }: CardProps) {
   const renderButton = () => {
     if (requireInstall) {
       return (
-        <Button variant="light" disabled={true}>
+        <Button variant="light" disabled={true} size="sm">
           Install
         </Button>
       );
@@ -105,7 +105,7 @@ export default function Card({ course, displayPurchase }: CardProps) {
 
     if (isConnecting) {
       return (
-        <Button variant="light" disabled={true}>
+        <Button variant="light" disabled={true} size="sm">
           <Loader size="sm" />
         </Button>
       );
@@ -115,13 +115,14 @@ export default function Card({ course, displayPurchase }: CardProps) {
       if (network.isSupported && hasOwner) {
         return (
           <div className="flex">
-            <Button disabled={true} variant="green" className="mr-1">
+            <Button disabled={true} variant="green" className="mr-2" size="sm">
               Owned
             </Button>
             {ownedCourse.data.state === "deactivated" && (
               <Button
                 variant="primary"
                 onClick={() => alert("Reactivating!!!")}
+                size="sm"
               >
                 Reactivate
               </Button>
@@ -134,6 +135,7 @@ export default function Card({ course, displayPurchase }: CardProps) {
             variant="light"
             disabled={!hasConnectedWallet}
             onClick={() => setSelectedCourse(course)}
+            size="sm"
           >
             Purchase
           </Button>
@@ -193,7 +195,7 @@ export default function Card({ course, displayPurchase }: CardProps) {
             </div>
             <Link
               href={`/course/${course.slug}`}
-              className="block mt-1 text-sm xs:text-lg leading-tight font-medium text-black hover:underline"
+              className="block mt-1 text-sm xs:text-base leading-tight font-medium text-black hover:underline"
             >
               {course.title}
             </Link>
