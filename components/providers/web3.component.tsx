@@ -49,6 +49,10 @@ const createWeb3State = ({
   };
 };
 
+const setListeners = (provider: any) => {
+  provider.on("chainChanged", (_: any) => window.location.reload());
+};
+
 export default function Web3Provider({ children }: Web3ProviderProps) {
   const [web3Api, setWeb3Api] = useState<Web3State>(
     createWeb3State({
@@ -67,6 +71,7 @@ export default function Web3Provider({ children }: Web3ProviderProps) {
       const web3 = new Web3(provider);
       const contract = await loadContract("CourseMarketplace", web3);
 
+      setListeners(provider);
       setWeb3Api(
         createWeb3State({
           web3,

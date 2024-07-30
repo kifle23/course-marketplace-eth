@@ -16,7 +16,6 @@ const targetNetwork =
   NETWORKS[parseInt(process.env.NEXT_PUBLIC_TARGET_CHAIN_ID as string)];
 interface UseNetworkProps {
   web3: Web3 | null;
-  provider: any;
 }
 
 const useNetworkSWR = (web3: Web3 | null) => {
@@ -37,22 +36,8 @@ const useNetworkSWR = (web3: Web3 | null) => {
   return { data, ...rest };
 };
 
-export const NetworkHandler = ({
-  web3,
-  provider,
-}: UseNetworkProps): Network => {
-  const { data, mutate, ...rest } = useNetworkSWR(web3);
-
-  useEffect(() => {
-    if (!provider) return;
-
-    const handleChainChanged = (chainId: string) =>
-      mutate(NETWORKS[parseInt(chainId, 16)]);
-
-    provider.on("chainChanged", handleChainChanged);
-
-    return () => provider.removeListener("chainChanged", handleChainChanged);
-  }, [provider, mutate]);
+export const NetworkHandler = ({ web3 }: UseNetworkProps): Network => {
+  const { data, ...rest } = useNetworkSWR(web3);
 
   return {
     data: data ?? "",
@@ -61,3 +46,4 @@ export const NetworkHandler = ({
     ...rest,
   };
 };
+

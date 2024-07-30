@@ -8,15 +8,23 @@ interface OrderModalProps {
   course: Course | null;
   onClose: () => void;
   onSubmit: (order: Order) => void;
+  isNewPurchase: boolean;
 }
+
 interface Order {
   price: string;
   email: string;
   confirmationEmail: string;
 }
+
 interface FormState {
   isDisabled: boolean;
-  message: string;
+  messages: {
+    price?: string;
+    email?: string;
+    confirmationEmail?: string;
+    tos?: string;
+  };
 }
 
 const defaultOrder: Order = {
@@ -25,39 +33,56 @@ const defaultOrder: Order = {
   confirmationEmail: "",
 };
 
-const _createFormState = (
-  isDisabled: boolean = false,
-  message: string = ""
-): FormState => ({ isDisabled, message });
+const validateOrder = (
+  order: Order,
+  hasAgreedTOS: boolean,
+  isNewPurchase: boolean
+): FormState => {
+  const messages: {
+    price?: string;
+    email?: string;
+    confirmationEmail?: string;
+    tos?: string;
+  } = {};
 
-function createFormState(
-  { price, email, confirmationEmail }: Order,
-  hasAgreedTOS: boolean
-): FormState {
-  if (!price || Number(price) <= 0) {
-    return _createFormState(true, "Price is not valid.");
+  if (!order.price || Number(order.price) <= 0) {
+    messages.price = "Price is not valid.";
   }
-  if (email !== confirmationEmail) {
-    return _createFormState(true, "Emails do not match");
+
+  if (isNewPurchase) {
+    if (!order.email) {
+      messages.email = "Email is required.";
+    }
+    if (order.email !== order.confirmationEmail) {
+      messages.confirmationEmail = "Emails do not match.";
+    }
   }
+
   if (!hasAgreedTOS) {
-    return _createFormState(
-      true,
-      "You need to agree with terms of service in order to submit the form"
-    );
+    messages.tos =
+      "You need to agree with terms of service to submit the form.";
   }
-  return _createFormState();
-}
+
+  return {
+    isDisabled: Object.values(messages).some((msg) => msg !== undefined),
+    messages,
+  };
+};
 
 export default function OrderModal({
   course,
   onClose,
+  isNewPurchase,
   onSubmit,
 }: OrderModalProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [order, setOrder] = useState(defaultOrder);
   const [enablePrice, setEnablePrice] = useState(false);
   const [hasAgreedTOS, setHasAgreedTOS] = useState(false);
+  const [formState, setFormState] = useState<FormState>({
+    isDisabled: true,
+    messages: {},
+  });
   const { eth } = useEthPrice();
 
   useEffect(() => {
@@ -68,17 +93,29 @@ export default function OrderModal({
         price: eth.perItem ? eth.perItem.toString() : "",
       });
     }
-  }, [course]);
+  }, [course, eth.perItem]);
+
+  useEffect(() => {
+    setFormState(validateOrder(order, hasAgreedTOS, isNewPurchase));
+  }, [order, hasAgreedTOS, isNewPurchase]);
 
   const handleModalClose = () => {
     setIsOpen(false);
     setOrder(defaultOrder);
     setEnablePrice(false);
     setHasAgreedTOS(false);
+    setFormState({ isDisabled: true, messages: {} });
     onClose();
   };
 
-  const formState = createFormState(order, hasAgreedTOS);
+  const handleInputChange = (field: keyof Order, value: string) => {
+    const updatedOrder = { ...order, [field]: value };
+    setOrder(updatedOrder);
+  };
+
+  const handleTOSChange = (checked: boolean) => {
+    setHasAgreedTOS(checked);
+  };
 
   return (
     <Modal isOpen={isOpen}>
@@ -120,61 +157,78 @@ export default function OrderModal({
                 <input
                   disabled={!enablePrice}
                   value={order.price}
-                  onChange={({ target: { value } }) => {
-                    if (value.match(/^\d*\.?\d*$/)) {
-                      setOrder({ ...order, price: value });
-                    }
-                  }}
+                  onChange={({ target: { value } }) =>
+                    handleInputChange("price", value)
+                  }
                   type="text"
                   name="price"
                   className="disabled:opacity-50 w-80 mb-1 focus:ring-indigo-500 shadow-md focus:border-indigo-500 block pl-7 p-4 sm:text-sm border-gray-300 rounded-md"
                 />
+                {formState.messages.price && (
+                  <p className="text-xs text-red-700">
+                    {formState.messages.price}
+                  </p>
+                )}
                 <p className="text-xs text-gray-700">
                   Price will be verified at the time of the order. If the price
                   will be lower, order can be declined (+- 2% slipage is
                   allowed)
                 </p>
               </div>
-              <div className="mt-2 relative rounded-md">
-                <div className="mb-1">
-                  <label className="mb-2 font-bold">Email</label>
-                </div>
-                <input
-                  onChange={({ target: { value } }) =>
-                    setOrder({ ...order, email: value.trim() })
-                  }
-                  type="email"
-                  name="email"
-                  className="w-80 focus:ring-indigo-500 shadow-md focus:border-indigo-500 block pl-7 p-4 sm:text-sm border-gray-300 rounded-md"
-                  placeholder="x@y.com"
-                />
-                <p className="text-xs text-gray-700 mt-1">
-                  It&apos;s important to fill a correct email, otherwise the
-                  order cannot be verified. We are not storing your email
-                  anywhere
-                </p>
-              </div>
-              <div className="my-2 relative rounded-md">
-                <div className="mb-1">
-                  <label className="mb-2 font-bold">Repeat Email</label>
-                </div>
-                <input
-                  onChange={({ target: { value } }) =>
-                    setOrder({ ...order, confirmationEmail: value.trim() })
-                  }
-                  type="email"
-                  name="confirmationEmail"
-                  className="w-80 focus:ring-indigo-500 shadow-md focus:border-indigo-500 block pl-7 p-4 sm:text-sm border-gray-300 rounded-md"
-                  placeholder="x@y.com"
-                />
-              </div>
-              <div className="text-xs text-gray-700 flex">
+              {isNewPurchase && (
+                <>
+                  <div className="mt-2 relative rounded-md">
+                    <div className="mb-1">
+                      <label className="mb-2 font-bold">Email</label>
+                    </div>
+                    <input
+                      onChange={({ target: { value } }) =>
+                        handleInputChange("email", value)
+                      }
+                      type="email"
+                      name="email"
+                      className="w-80 focus:ring-indigo-500 shadow-md focus:border-indigo-500 block pl-7 p-4 sm:text-sm border-gray-300 rounded-md"
+                      placeholder="x@y.com"
+                    />
+                    {formState.messages.email && (
+                      <p className="text-xs text-red-700">
+                        {formState.messages.email}
+                      </p>
+                    )}
+                    <p className="text-xs text-gray-700 mt-1">
+                      It&apos;s important to fill a correct email, otherwise the
+                      order cannot be verified. We are not storing your email
+                      anywhere
+                    </p>
+                  </div>
+                  <div className="my-2 relative rounded-md">
+                    <div className="mb-1">
+                      <label className="mb-2 font-bold">Repeat Email</label>
+                    </div>
+                    <input
+                      onChange={({ target: { value } }) =>
+                        handleInputChange("confirmationEmail", value)
+                      }
+                      type="email"
+                      name="confirmationEmail"
+                      className="w-80 focus:ring-indigo-500 shadow-md focus:border-indigo-500 block pl-7 p-4 sm:text-sm border-gray-300 rounded-md"
+                      placeholder="x@y.com"
+                    />
+                    {formState.messages.confirmationEmail && (
+                      <p className="text-xs text-red-700">
+                        {formState.messages.confirmationEmail}
+                      </p>
+                    )}
+                  </div>
+                </>
+              )}
+              <div className="text-xs text-gray-700 flex mt-5">
                 <label className="flex items-center mr-2">
                   <input
                     checked={hasAgreedTOS}
-                    onChange={({ target: { checked } }) => {
-                      setHasAgreedTOS(checked);
-                    }}
+                    onChange={({ target: { checked } }) =>
+                      handleTOSChange(checked)
+                    }
                     type="checkbox"
                     className="form-checkbox"
                   />
@@ -185,10 +239,8 @@ export default function OrderModal({
                   correct
                 </span>
               </div>
-              {formState.message && (
-                <div className="p-4 my-3 text-sm text-red-700 bg-red-200 rounded-lg">
-                  {formState.message}
-                </div>
+              {formState.messages.tos && (
+                <p className="text-xs text-red-700">{formState.messages.tos}</p>
               )}
             </div>
           </div>

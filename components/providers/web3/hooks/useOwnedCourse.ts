@@ -34,9 +34,12 @@ export const OwnedCourseHandler = ({
 }: UseOwnedCourseProps) => {
   const shouldFetch = web3 && contract && account;
 
-  const swrRes = useSWR(
-    shouldFetch ? `web3/OwnedCourse/${account}` : null,
-    () => fetchOwnedCourse(web3!, contract, account, course)
+  const swrKey = shouldFetch
+    ? `web3/OwnedCourse/${account}/${course.id}`
+    : null;
+
+  const swrRes = useSWR(swrKey, () =>
+    fetchOwnedCourse(web3!, contract, account, course)
   );
 
   return swrRes;

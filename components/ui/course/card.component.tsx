@@ -2,11 +2,12 @@
 import Image from "next/image";
 import { Course } from "@content/courses/types";
 import Link from "next/link";
-import { Button } from "@components/ui/common";
+import { Button, Loader } from "@components/ui/common";
 import { useState } from "react";
-import { useWalletInfo } from "@components/hooks/web3";
+import { useOwnedCourse, useWalletInfo } from "@components/hooks/web3";
 import { OrderModal } from "@components/ui/order";
 import { useWeb3 } from "@components/providers";
+import { AnimateKeyframes } from "react-simple-animate";
 
 interface CardProps {
   course: Course;
@@ -19,10 +20,29 @@ interface Order {
   confirmationEmail: string;
 }
 
+const STATE_COLORS = {
+  purchased: {
+    text: "text-indigo-500",
+    bg: "bg-yellow-200",
+  },
+  activated: {
+    text: "text-green-500",
+    bg: "bg-green-200",
+  },
+  deactivated: {
+    text: "text-red-500",
+    bg: "bg-red-200",
+  },
+};
+
 export default function Card({ course, displayPurchase }: CardProps) {
-  const { web3, contract } = useWeb3();
+  const { web3, contract, requireInstall } = useWeb3();
   const [selectedCourse, setSelectedCourse] = useState<Course | null>(null);
-  const { canPurchase, account } = useWalletInfo();
+  const [isNewPurchase, setIsNewPurchase] = useState(true);
+  const { hasConnectedWallet, isConnecting, account, network } =
+    useWalletInfo();
+  const { ownedCourse } = useOwnedCourse(course, account.data);
+  const hasOwner = !!ownedCourse.data;
 
   const convertCourseIdToBytes16 = (courseId: number, web3: any): string => {
     const hexString = web3.utils.toHex(courseId);
@@ -50,18 +70,19 @@ export default function Card({ course, displayPurchase }: CardProps) {
           { type: "bytes16", value: courseIdBytes },
           { type: "address", value: account.data }
         );
-        const emailHash = web3.utils.sha3(order.email);
-        const proof = web3.utils.soliditySha3(
-          { type: "bytes32", value: emailHash },
-          { type: "bytes32", value: orderHash }
-        );
+        const value = web3.utils.toWei(order.price, "ether");
 
-        await contract.methods.purchaseCourse(courseIdBytes, proof).send({
-          from: account.data,
-          value: web3.utils.toWei(order.price, "ether"),
-        });
+        if (isNewPurchase) {
+          const emailHash = web3.utils.sha3(order.email);
+          const proof = web3.utils.soliditySha3(
+            { type: "bytes32", value: emailHash },
+            { type: "bytes32", value: orderHash }
+          );
 
-        console.log("Course purchased successfully");
+          _purchaseCourse(courseIdBytes, proof, value);
+        } else {
+          _repurchaseCourse(orderHash, value);
+        }
       } catch (error) {
         console.clear();
         console.error(
@@ -75,13 +96,97 @@ export default function Card({ course, displayPurchase }: CardProps) {
     await retryPurchase(3);
   };
 
+  const _purchaseCourse = async (
+    courseIdBytes: string,
+    proof: any,
+    value: any
+  ) => {
+    await contract.methods.purchaseCourse(courseIdBytes, proof).send({
+      from: account.data,
+      value: value,
+    });
+    console.log("Course purchased successfully!");
+  };
+
+  const _repurchaseCourse = async (orderHash: any, value: any) => {
+    await contract.methods.repurchaseCourse(orderHash).send({
+      from: account.data,
+      value: value,
+    });
+    console.log("Course repurchased successfully!");
+  };
+
+  const renderButton = () => {
+    if (requireInstall) {
+      return (
+        <Button variant="light" disabled={true} size="sm">
+          Install
+        </Button>
+      );
+    }
+
+    if (isConnecting) {
+      return (
+        <Button variant="light" disabled={true} size="sm">
+          <Loader size="sm" />
+        </Button>
+      );
+    }
+
+    if (displayPurchase) {
+      if (network.isSupported && hasOwner) {
+        return (
+          <div className="flex">
+            <Button
+              variant="white"
+              hoverable={false}
+              className="mr-2"
+              size="sm"
+            >
+              Yours &#10004;
+            </Button>
+            {ownedCourse.data.state === "deactivated" && (
+              <Button
+                variant="primary"
+                onClick={() => {
+                  setIsNewPurchase(false);
+                  setSelectedCourse(course);
+                }}
+                size="sm"
+              >
+                Reactivate
+              </Button>
+            )}
+          </div>
+        );
+      } else {
+        return (
+          <Button
+            variant="light"
+            disabled={!hasConnectedWallet}
+            onClick={() => setSelectedCourse(course)}
+            size="sm"
+          >
+            Purchase
+          </Button>
+        );
+      }
+    }
+
+    return null;
+  };
+
+  const stateColor = ownedCourse.data
+    ? STATE_COLORS[ownedCourse.data.state as keyof typeof STATE_COLORS]
+    : null;
+
   return (
     <div className="bg-white rounded-xl shadow-md overflow-hidden md:max-w-2xl">
       <div className="flex flex-col md:flex-row h-full">
         <div className="relative w-full h-48 md:w-[50%] md:h-auto">
           <Image
             className={`object-cover w-full h-full ${
-              !canPurchase && "filter grayscale"
+              !hasConnectedWallet && "filter grayscale"
             }`}
             src={course.coverImage}
             alt={course.title}
@@ -92,12 +197,35 @@ export default function Card({ course, displayPurchase }: CardProps) {
         </div>
         <div className="p-8 pb-4 flex flex-col justify-between w-full md:w-[50%]">
           <div>
-            <div className="uppercase tracking-wide text-sm text-indigo-500 font-semibold">
-              {course.type}
+            <div className="flex items-center space-x-2">
+              <span className="uppercase tracking-wide text-sm text-indigo-500 font-semibold">
+                {course.type}
+              </span>
+              {network.isSupported &&
+                displayPurchase &&
+                hasOwner &&
+                stateColor && (
+                  <span
+                    className={`text-xs ${stateColor.text} ${stateColor.bg} font-semibold rounded-full p-2`}
+                  >
+                    {ownedCourse.data.state === "purchased" ? (
+                      <AnimateKeyframes
+                        play
+                        duration={2}
+                        keyframes={["opacity: 0.2", "opacity: 1"]}
+                        iterationCount="infinite"
+                      >
+                        pending
+                      </AnimateKeyframes>
+                    ) : (
+                      ownedCourse.data.state
+                    )}
+                  </span>
+                )}
             </div>
             <Link
               href={`/course/${course.slug}`}
-              className="block mt-1 text-sm xs:text-lg leading-tight font-medium text-black hover:underline"
+              className="block mt-1 text-sm xs:text-base leading-tight font-medium text-black hover:underline"
             >
               {course.title}
             </Link>
@@ -105,21 +233,15 @@ export default function Card({ course, displayPurchase }: CardProps) {
               {course.description.substring(0, 70)}...
             </p>
           </div>
-          {displayPurchase && (
-            <div className="mt-4">
-              <Button
-                variant="light"
-                disabled={!canPurchase}
-                onClick={() => setSelectedCourse(course)}
-              >
-                Purchase
-              </Button>
-            </div>
-          )}
+          <div className="mt-4">{renderButton()}</div>
           <OrderModal
             course={selectedCourse}
             onSubmit={purchaseCourse}
-            onClose={() => setSelectedCourse(null)}
+            isNewPurchase={isNewPurchase}
+            onClose={() => {
+              setSelectedCourse(null);
+              setIsNewPurchase(true);
+            }}
           />
         </div>
       </div>

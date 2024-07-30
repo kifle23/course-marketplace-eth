@@ -15,7 +15,7 @@ interface setupHooksProps {
 export const SetupHooks = ({ web3, provider, contract }: setupHooksProps) => {
   return {
     useAccount: createAccountHook({ web3, provider }),
-    useNetwork: createNetworkHook({ web3, provider }),
+    useNetwork: createNetworkHook({ web3 }),
     useOwnedCourses: (courses: Course[], account: string) => createOwnedCoursesHook({ web3, contract, courses, account }),
     useOwnedCourse: (course: Course, account: string) => createOwnedCourseHook({ web3, contract, course, account }),
     useManagedCourses: (account: Account) => createManagedCoursesHook({ web3, contract, account }),
