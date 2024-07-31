@@ -6,6 +6,7 @@ import { useState } from "react";
 import { useWeb3 } from "@components/providers";
 import VerificationInput from "@components/ui/course/verification-input.component";
 import { Course } from "@content/courses/types";
+import { normalizeOwnedCourse } from "@utils/normalize";
 
 export default function ManageWrapper() {
   const { web3, contract } = useWeb3();
@@ -14,6 +15,7 @@ export default function ManageWrapper() {
   const [proofedOwnership, setProofedOwnership] = useState<{
     [key: string]: boolean;
   }>({});
+  const [searchedCourse, setSearchedCourse] = useState<Course | null>(null);
   type ContractMethod = "activateCourse" | "deactivateCourse";
 
   function verifyCourse(
@@ -38,12 +40,22 @@ export default function ManageWrapper() {
         });
   }
 
-  const searchCourse = (courseHash: string | undefined) => {
-    if (!courseHash) {
-      return;
+  const searchCourse = async (courseHash: string | undefined) => {
+    const re = /[0-9A-Fa-f]{6}/g;
+
+    if (courseHash && courseHash.length === 66 && re.test(courseHash)) {
+      const course = await contract.methods.getCourseByHash(courseHash).call();
+
+      if (course.owner !== "0x0000000000000000000000000000000000000000") {
+        const normalized = web3
+          ? normalizeOwnedCourse(web3)(courseHash as any, course)
+          : null;
+        setSearchedCourse(normalized);
+        return;
+      }
     }
 
-    alert(courseHash);
+    setSearchedCourse(null);
   };
 
   const changeCourseState = async (
