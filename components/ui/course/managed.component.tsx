@@ -111,11 +111,21 @@ export default function ManageWrapper() {
     );
   };
 
-  useEffect(() => {
-    console.log(filters);
-  }, [filters]);
-
   if (!account.isAdmin) return null;
+
+  const filteredCourses = managedCourses.data
+    ?.filter((course: Course) => {
+      if (filters.state === "all") return true;
+      return course.state === filters.state;
+    })
+    .map((course: Course, index: number) => (
+      <ManagedCourseCard
+        key={`${index}-${course.ownedCourseId}`}
+        course={course}
+      >
+        {handleCourseAction(course)}
+      </ManagedCourseCard>
+    ));
 
   return (
     <>
@@ -138,14 +148,10 @@ export default function ManageWrapper() {
           </>
         )}
         <h1 className="text-2xl font-bold p-5">All Courses</h1>
-        {managedCourses.data?.map((course: Course, index: number) => (
-          <ManagedCourseCard
-            key={`${index}-${course.ownedCourseId}`}
-            course={course}
-          >
-            {handleCourseAction(course)}
-          </ManagedCourseCard>
-        ))}
+        {filteredCourses}
+        {filteredCourses?.length === 0 && (
+          <Message type="warning">No courses to display</Message>
+        )}
       </section>
     </>
   );
