@@ -3,6 +3,7 @@ import { Course } from "@content/courses/types";
 interface ManagedCourseCardProps {
   course: Course;
   children?: React.ReactNode;
+  isSearch?: boolean;
 }
 interface ItemProps {
   title: string;
@@ -24,6 +25,7 @@ function Item({ title, value, className }: ItemProps) {
 export default function ManagedCourseCard({
   course,
   children,
+  isSearch = false,
 }: ManagedCourseCardProps) {
   const items = [
     {
@@ -51,18 +53,20 @@ export default function ManagedCourseCard({
   ];
 
   return (
-    <div className="bg-white border shadow overflow-hidden sm:rounded-lg mb-3">
-      <div className="border-t border-gray-200">
-        {items.map((item, itemIndex) => (
-          <Item
-            key={itemIndex}
-            title={item.title}
-            value={item.value.toString()}
-            className={item.className}
-          />
-        ))}
-        {children}
-      </div>
+    <div
+      className={`${
+        isSearch ? "border-indigo-600" : "bg-gray-200"
+      } bg-white border shadow overflow-hidden sm:rounded-lg mb-3`}
+    >
+      {items.map((item, itemIndex) => (
+        <Item
+          key={itemIndex}
+          title={item.title}
+          value={item.value.toString()}
+          className={item.className}
+        />
+      ))}
+      {children}
     </div>
   );
 }
