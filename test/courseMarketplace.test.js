@@ -295,5 +295,49 @@ contract('CourseMarketplace', accounts => {
         });
 
     });
+
+    describe("Emergency withdraw", () => {
+        let currentOwner;
+
+        before(async () => {
+            currentOwner = await _contract.getContractOwner();
+        });
+
+        after(async () => {
+            await _contract.resumeContract({ from: currentOwner });
+        });
+
+        it("should fail when contract is NOT stopped", async () => {
+            await catchRevert(_contract.emergencyWithdraw({ from: currentOwner }));
+        });
+
+        it("should have +contract funds on contract owner", async () => {
+            await _contract.stopContract({ from: contractOwner });
+
+            const contractBalance = await getBalance(_contract.address);
+            const ownerBalance = await getBalance(currentOwner);
+
+            const result = await _contract.emergencyWithdraw({ from: currentOwner });
+            const gas = await getGas(result);
+
+            const newOwnerBalance = await getBalance(currentOwner);
+
+            assert.equal(
+                toBN(ownerBalance).add(toBN(contractBalance)).sub(gas),
+                newOwnerBalance,
+                "Owner doesn't have contract balance"
+            );
+        });
+
+        it("should have contract balance of 0", async () => {
+            const contractBalance = await getBalance(_contract.address);
+
+            assert.equal(
+                contractBalance,
+                0,
+                "Contract does't have 0 balance"
+            );
+        });
+    });
 });
 
