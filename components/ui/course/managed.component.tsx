@@ -38,6 +38,14 @@ export default function ManageWrapper() {
         });
   }
 
+  const searchCourse = (courseHash: string | undefined) => {
+    if (!courseHash) {
+      return;
+    }
+
+    alert(courseHash);
+  };
+
   const changeCourseState = async (
     courseHash: string,
     method: ContractMethod
@@ -77,7 +85,7 @@ export default function ManageWrapper() {
 
   return (
     <>
-      <CourseFilter />
+      <CourseFilter onSearchSubmit={searchCourse} />
       <section className="grid grid-cols-1">
         {managedCourses.data?.map((course: Course, index: number) => (
           <ManagedCourseCard
