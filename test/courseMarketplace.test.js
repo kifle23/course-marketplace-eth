@@ -232,5 +232,27 @@ contract('CourseMarketplace', accounts => {
             await catchRevert(_contract.repurchaseCourse(courseHash2, { from: buyer }));
         });
     });
+
+    describe("Receive funds", () => {
+        it("should have transacted funds", async () => {
+            const value = "100000000000000000";
+            const contractBeforeTx = await getBalance(_contract.address);
+
+            await web3.eth.sendTransaction({
+                from: buyer,
+                to: _contract.address,
+                value
+            });
+
+            const contractAfterTx = await getBalance(_contract.address);
+
+            assert.equal(
+                toBN(contractBeforeTx).add(toBN(value)).toString(),
+                contractAfterTx,
+                "Value after transaction is not matching!"
+            );
+
+        });
+    });
 });
 
