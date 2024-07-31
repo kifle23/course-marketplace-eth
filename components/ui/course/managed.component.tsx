@@ -2,7 +2,7 @@
 import { useAdmin, useManagedCourses } from "@components/hooks/web3";
 import { CourseFilter, ManagedCourseCard } from "@components/ui/course";
 import { Button, Message } from "@components/ui/common";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useWeb3 } from "@components/providers";
 import VerificationInput from "@components/ui/course/verification-input.component";
 import { Course, OwnedCourse } from "@content/courses/types";
@@ -16,6 +16,8 @@ export default function ManageWrapper() {
     [key: string]: boolean;
   }>({});
   const [searchedCourse, setSearchedCourse] = useState<Course | null>(null);
+  const [filters, setFilters] = useState({ state: "all" });
+
   type ContractMethod = "activateCourse" | "deactivateCourse";
 
   function verifyCourse(
@@ -109,11 +111,18 @@ export default function ManageWrapper() {
     );
   };
 
+  useEffect(() => {
+    console.log(filters);
+  }, [filters]);
+
   if (!account.isAdmin) return null;
 
   return (
     <>
-      <CourseFilter onSearchSubmit={searchCourse} />
+      <CourseFilter
+        onFilterSelect={(value) => setFilters({ state: value })}
+        onSearchSubmit={searchCourse}
+      />
       <section className="grid grid-cols-1">
         {searchedCourse && (
           <>
