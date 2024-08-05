@@ -9,7 +9,7 @@ export default function Nav() {
   const [isOpen, setIsOpen] = useState(false);
   const { connect, isLoading, requireInstall } = useWeb3();
   const account = useAccount();
-  const { data, isAdmin, isInitialized, isEmpty } = account;
+  const { data, isAdmin, isInitialized } = account;
   const pathname = usePathname();
 
   return (

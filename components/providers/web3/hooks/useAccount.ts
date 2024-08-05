@@ -8,10 +8,16 @@ interface UseAccountProps {
   provider: any;
 }
 
-const adminAddresses: { [key: string]: boolean } = {
-  "0x9ec9defa6a6986c63d380f2dd4f2c24892fa86fdef7d9a27a1cac7767480c051": true,
-  "0x9345724d971d791dc155f3b85a13c50bbd1774b604e385808470082ca55940c0": true,
-};
+const adminAddresses: { [key: string]: boolean } =
+  process.env.NODE_ENV === "production"
+    ? {
+        "0xb4b6f6a4fb37c47420237bb39a98f6579a86bf44b05182018f4fdbf5d2116170":
+          true,
+      }
+    : {
+        "0x9ec9defa6a6986c63d380f2dd4f2c24892fa86fdef7d9a27a1cac7767480c051":
+          true,
+      };
 
 export const AccountHandler = ({
   web3,
