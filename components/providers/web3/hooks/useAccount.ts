@@ -10,13 +10,9 @@ interface UseAccountProps {
 
 const adminAddresses: { [key: string]: boolean } =
   process.env.NODE_ENV === "production"
-    ? {
-        "0xb4b6f6a4fb37c47420237bb39a98f6579a86bf44b05182018f4fdbf5d2116170":
-          true,
-      }
+    ? { [process.env.NEXT_PUBLIC_ADMIN_ADDRESS_PROD as string]: true }
     : {
-        "0x9ec9defa6a6986c63d380f2dd4f2c24892fa86fdef7d9a27a1cac7767480c051":
-          true,
+        [process.env.NEXT_PUBLIC_ADMIN_ADDRESS_DEV as string]: true,
       };
 
 export const AccountHandler = ({
@@ -29,6 +25,7 @@ export const AccountHandler = ({
       if (web3) {
         const accounts = await web3.eth.getAccounts();
         const account = accounts[0];
+        console.log("account: ", account);
         if (!account) {
           throw new Error(
             "Cannot retrieve an account. Please refresh the browser."
@@ -53,10 +50,10 @@ export const AccountHandler = ({
     return () =>
       provider.removeListener("accountsChanged", handleAccountsChanged);
   }, [provider, mutate]);
-
+  
   return {
     data: data ?? "",
-    isAdmin: !!(data && web3 && adminAddresses[web3.utils.keccak256(data)]),
+    isAdmin: !!(data && web3 && adminAddresses[data]),
     mutate,
     ...rest,
   };
