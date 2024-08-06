@@ -1,5 +1,4 @@
 import { Network } from "@interfaces/iWalletInfo";
-import { useEffect } from "react";
 import useSWR from "swr";
 import Web3 from "web3";
 
