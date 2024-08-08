@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "@styles/globals.css";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import { Footer, Nav } from "@components/ui/common";
 import { Web3Provider } from "@components/providers";
 
@@ -25,7 +27,9 @@ export default function RootLayout({
               <Nav />
             </header>
             <main>
-              <div className="fit">{children}</div>
+              <div className="fit">
+                {children} <ToastContainer />
+              </div>
             </main>
           </Web3Provider>
         </div>

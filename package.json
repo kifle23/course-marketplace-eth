@@ -15,6 +15,7 @@
     "react": "^18",
     "react-dom": "^18",
     "react-simple-animate": "^3.5.2",
+    "react-toastify": "^10.0.5",
     "sharp": "^0.33.4",
     "swr": "^2.2.5",
     "web3": "^4.11.0"
@@ -31,4 +32,3 @@
     "typescript": "^5"
   }
 }
-
