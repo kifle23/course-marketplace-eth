@@ -250,6 +250,7 @@ export default function OrderModal({
             disabled={formState.isDisabled}
             onClick={() => {
               onSubmit(order);
+              handleModalClose();
             }}
           >
             Submit

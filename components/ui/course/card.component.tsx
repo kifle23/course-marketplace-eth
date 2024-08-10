@@ -3,11 +3,12 @@ import Image from "next/image";
 import { Course } from "@content/courses/types";
 import Link from "next/link";
 import { Button, Loader } from "@components/ui/common";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useOwnedCourse, useWalletInfo } from "@components/hooks/web3";
 import { OrderModal } from "@components/ui/order";
 import { useWeb3 } from "@components/providers";
 import { AnimateKeyframes } from "react-simple-animate";
+import { withToast } from "@utils/toast";
 
 interface CardProps {
   course: Course;
@@ -21,105 +22,88 @@ interface Order {
 }
 
 const STATE_COLORS = {
-  purchased: {
-    text: "text-indigo-500",
-    bg: "bg-yellow-200",
-  },
-  activated: {
-    text: "text-green-500",
-    bg: "bg-green-200",
-  },
-  deactivated: {
-    text: "text-red-500",
-    bg: "bg-red-200",
-  },
+  purchased: { text: "text-indigo-500", bg: "bg-yellow-200" },
+  activated: { text: "text-green-500", bg: "bg-green-200" },
+  deactivated: { text: "text-red-500", bg: "bg-red-200" },
 };
 
 export default function Card({ course, displayPurchase }: CardProps) {
   const { web3, contract, requireInstall } = useWeb3();
-  const [selectedCourse, setSelectedCourse] = useState<Course | null>(null);
-  const [isNewPurchase, setIsNewPurchase] = useState(true);
   const { hasConnectedWallet, isConnecting, account, network } =
     useWalletInfo();
   const { ownedCourse } = useOwnedCourse(course, account.data);
-  const hasOwner = !!ownedCourse.data;
+  const [selectedCourse, setSelectedCourse] = useState<Course | null>(null);
+  const [isNewPurchase, setIsNewPurchase] = useState(true);
+  const [isPurchasing, setIsPurchasing] = useState(false);
 
-  const convertCourseIdToBytes16 = (courseId: number, web3: any): string => {
-    const hexString = web3.utils.toHex(courseId);
-    const paddedHex = web3.utils.padLeft(hexString, 32);
-    return paddedHex;
-  };
+  const hasOwner = !!ownedCourse?.data;
 
   const purchaseCourse = async (order: Order) => {
     if (!selectedCourse || !web3 || !contract) {
-      console.error("Selected course, web3 instance, or contract not found.");
-      return;
+      return withToast(
+        Promise.reject(
+          new Error("Selected course, web3 instance, or contract not found.")
+        )
+      );
     }
 
-    const courseId = selectedCourse.id;
+    const courseIdBytes = web3.utils.padLeft(
+      web3.utils.toHex(Number(selectedCourse.id)),
+      32
+    );
+    const orderHash =
+      web3.utils.soliditySha3(
+        { type: "bytes16", value: courseIdBytes },
+        { type: "address", value: account.data }
+      ) || "";
+    const value = web3.utils.toWei(order.price, "ether") || "";
 
-    const retryPurchase = async (retries: number): Promise<void> => {
-      if (retries === 0) {
-        console.error("Failed to purchase course after multiple attempts.");
-        return;
-      }
+    try {
+      setIsPurchasing(true);
+      const toastPromise = isNewPurchase
+        ? _purchaseCourse(courseIdBytes, order, orderHash, value, web3)
+        : _repurchaseCourse(orderHash, value);
 
-      try {
-        const courseIdBytes = convertCourseIdToBytes16(Number(courseId), web3);
-        const orderHash = web3.utils.soliditySha3(
-          { type: "bytes16", value: courseIdBytes },
-          { type: "address", value: account.data }
-        );
-        const value = web3.utils.toWei(order.price, "ether");
-
-        if (isNewPurchase) {
-          const emailHash = web3.utils.sha3(order.email);
-          const proof = web3.utils.soliditySha3(
-            { type: "bytes32", value: emailHash },
-            { type: "bytes32", value: orderHash }
-          );
-
-          _purchaseCourse(courseIdBytes, proof, value);
-        } else {
-          _repurchaseCourse(orderHash, value);
-        }
-      } catch (error) {
-        console.clear();
-        console.error(
-          `Error purchasing course, retries left: ${retries - 1}`,
-          error
-        );
-        await retryPurchase(retries - 1);
-      }
-    };
-
-    await retryPurchase(3);
+      withToast(
+        toastPromise.then(() => {
+          ownedCourse?.mutate();
+          setIsPurchasing(false);
+        })
+      );
+    } catch {
+      setIsPurchasing(false);
+    }
   };
 
   const _purchaseCourse = async (
     courseIdBytes: string,
-    proof: any,
-    value: any
+    order: Order,
+    orderHash: string,
+    value: string,
+    web3: any
   ) => {
-    await contract.methods.purchaseCourse(courseIdBytes, proof).send({
+    const emailHash = web3.utils.sha3(order.email);
+    const proof = web3.utils.soliditySha3(
+      { type: "bytes32", value: emailHash },
+      { type: "bytes32", value: orderHash }
+    );
+
+    return contract.methods.purchaseCourse(courseIdBytes, proof).send({
       from: account.data,
-      value: value,
+      value,
     });
-    console.log("Course purchased successfully!");
   };
 
-  const _repurchaseCourse = async (orderHash: any, value: any) => {
-    await contract.methods.repurchaseCourse(orderHash).send({
+  const _repurchaseCourse = (orderHash: any, value: any) =>
+    contract.methods.repurchaseCourse(orderHash).send({
       from: account.data,
-      value: value,
+      value,
     });
-    console.log("Course repurchased successfully!");
-  };
 
   const renderButton = () => {
     if (requireInstall) {
       return (
-        <Button variant="light" disabled={true} size="sm">
+        <Button variant="light" disabled size="sm">
           Install
         </Button>
       );
@@ -127,54 +111,53 @@ export default function Card({ course, displayPurchase }: CardProps) {
 
     if (isConnecting) {
       return (
-        <Button variant="light" disabled={true} size="sm">
+        <Button variant="light" disabled size="sm">
           <Loader size="sm" />
         </Button>
       );
     }
 
-    if (displayPurchase) {
-      if (network.isSupported && hasOwner) {
-        return (
-          <div className="flex">
+    if (!displayPurchase) return null;
+
+    if (network.isSupported && hasOwner) {
+      return (
+        <div className="flex">
+          <Button variant="white" hoverable={false} className="mr-2" size="sm">
+            Yours &#10004;
+          </Button>
+          {ownedCourse?.data.state === "deactivated" && (
             <Button
-              variant="white"
-              hoverable={false}
-              className="mr-2"
+              disabled={isPurchasing}
+              variant={isPurchasing ? "light" : "primary"}
+              onClick={() => {
+                setIsNewPurchase(false);
+                setSelectedCourse(course);
+              }}
               size="sm"
             >
-              Yours &#10004;
+              {isPurchasing ? <Loader size="sm" /> : "Reactivate"}
             </Button>
-            {ownedCourse.data.state === "deactivated" && (
-              <Button
-                variant="primary"
-                onClick={() => {
-                  setIsNewPurchase(false);
-                  setSelectedCourse(course);
-                }}
-                size="sm"
-              >
-                Reactivate
-              </Button>
-            )}
-          </div>
-        );
-      } else {
-        return (
-          <Button
-            variant="light"
-            disabled={!hasConnectedWallet}
-            onClick={() => setSelectedCourse(course)}
-            size="sm"
-          >
-            Purchase
-          </Button>
-        );
-      }
+          )}
+        </div>
+      );
     }
 
-    return null;
+    return (
+      <Button
+        variant="light"
+        disabled={!hasConnectedWallet}
+        onClick={() => setSelectedCourse(course)}
+        size="sm"
+      >
+        {isPurchasing ? <Loader size="sm" /> : "Purchase"}
+      </Button>
+    );
   };
+
+  function cleanModal() {
+    setSelectedCourse(null);
+    setIsNewPurchase(true);
+  }
 
   const stateColor = ownedCourse.data
     ? STATE_COLORS[ownedCourse.data.state as keyof typeof STATE_COLORS]
@@ -238,10 +221,7 @@ export default function Card({ course, displayPurchase }: CardProps) {
             course={selectedCourse}
             onSubmit={purchaseCourse}
             isNewPurchase={isNewPurchase}
-            onClose={() => {
-              setSelectedCourse(null);
-              setIsNewPurchase(true);
-            }}
+            onClose={cleanModal}
           />
         </div>
       </div>

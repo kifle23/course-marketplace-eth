@@ -2,6 +2,10 @@
 import { Breadcrumbs } from "@components/ui/common";
 import { EthRates, WalletBar } from "@components/ui/web3";
 
+interface TransactionData {
+  transactionHash: string;
+}
+
 export default function Header() {
   const LINKS = [
     {

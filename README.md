@@ -1,36 +1,109 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Course Marketplace ETH
 
-## Getting Started
+Welcome to **course-marketplace-eth**! This decentralized application (dApp) is built on the Ethereum blockchain, enabling users to purchase, manage, and verify ownership of courses. It leverages smart contracts to handle course purchases, repurchases, and ownership verification.
 
-First, run the development server:
+| ![alt text](public/readme/largeScreen.png) | ![alt text](public/readme/mediumScreen.png) | ![alt text](public/readme/smallScreen.png) |
+| :----------------------------------------: | :-----------------------------------------: | :----------------------------------------: |
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+## Live Demo
+
+A live demo of the application is available [here](https://course-marketplace-eth-seven.vercel.app/). You can explore the features of the `course-marketplace-eth` application, including purchasing courses, verifying ownership, and managing courses as an admin.
+
+Make sure to connect your MetaMask wallet to interact with the demo.
+
+## Features
+
+- **Course Listing**: Browse through a variety of available courses.
+- **Purchase Courses**: Buy new courses or reactivate existing ones.
+- **Ownership Verification**: Verify ownership of purchased courses.
+- **Manage Courses**: Admins can activate, deactivate or verify ownership of courses.
+- **Blockchain Integration**: Transactions and course data are securely stored on the Ethereum blockchain.
+
+## Technology Stack
+
+- **Frontend**: React, Next.js
+- **Blockchain**: Ethereum, Solidity, Truffle
+- **Web3 Integration**: Web3.js, MetaMask
+- **Styling**: Tailwind CSS
+- **State Management**: React Hooks, SWR (for data fetching and mutation)
+- **Notifications**: react-toastify
+
+## Prerequisites
+
+Before you begin, ensure you have met the following requirements:
+
+- **Node.js**: Install the latest version of Node.js and npm.
+- **MetaMask**: Install the MetaMask browser extension for managing Ethereum accounts.
+- **Truffle**: Install Truffle for smart contract management.
+
+## Installation
+
+1. **Clone the repository**:
+
+   ```bash
+   git clone https://github.com/kifle23/course-marketplace-eth.git
+   cd course-marketplace-eth
+   ```
+
+2. **Install dependencies**:
+
+   ```bash
+   npm install
+   ```
+
+3. **Compile and deploy smart contracts**:
+
+   ```bash
+   truffle compile
+   truffle migrate --network "sepolia" || "ganache"
+   ```
+
+4. **Run the development server**:
+
+   ```bash
+   npm run dev
+   ```
+
+5. **Access the application**:
+   Open [http://localhost:3000](http://localhost:3000) in your browser.
+
+## Environment Variables
+
+Create a `.env.local` file in the root directory and add the following environment variables:
+
+```plaintext
+NEXT_PUBLIC_INFURA_API_KEY=your_infura_project_id
+NEXT_PUBLIC_CONTRACT_ADDRESS=your_contract_address
+NEXT_PUBLIC_ADMIN_ADDRESS_PROD=your_admin_address_in_production
+NEXT_PUBLIC_ADMIN_ADDRESS_DEV=your_admin_address_in_development
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Usage
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+1. **Connect MetaMask**: Click on the "Connect Wallet" button to link your Ethereum account.
+2. **Browse Courses**: Navigate through the course listings and select the desired course.
+3. **Purchase a Course**: Click on "Purchase" to buy the course. Confirm the transaction in MetaMask.
+4. **Admin Features**: If you are an admin, you can activate, deactivate or verify courses directly from the course management dashboard.
+5. **Verify Ownership**: Enter buyer email in the verification input to confirm ownership of the course.
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+## Production Deployment
 
-## Learn More
+To deploy the application for production:
 
-To learn more about Next.js, take a look at the following resources:
+1. **Build and Start the application**:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+   ```bash
+   npm run deploy
+   ```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+2. **Access the application**:
+   Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-## Deploy on Vercel
+## Contributing
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Contributions are welcome! Please fork the repository and create a pull request with your changes.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+## License
+
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+

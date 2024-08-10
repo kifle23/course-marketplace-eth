@@ -25,7 +25,6 @@ export const AccountHandler = ({
       if (web3) {
         const accounts = await web3.eth.getAccounts();
         const account = accounts[0];
-        console.log("account: ", account);
         if (!account) {
           throw new Error(
             "Cannot retrieve an account. Please refresh the browser."
@@ -50,7 +49,7 @@ export const AccountHandler = ({
     return () =>
       provider.removeListener("accountsChanged", handleAccountsChanged);
   }, [provider, mutate]);
-  
+
   return {
     data: data ?? "",
     isAdmin: !!(data && web3 && adminAddresses[data]),

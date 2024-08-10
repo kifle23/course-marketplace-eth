@@ -2,11 +2,12 @@
 import { useAdmin, useManagedCourses } from "@components/hooks/web3";
 import { CourseFilter, ManagedCourseCard } from "@components/ui/course";
 import { Button, Message } from "@components/ui/common";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useWeb3 } from "@components/providers";
 import VerificationInput from "@components/ui/course/verification-input.component";
 import { Course, OwnedCourse } from "@content/courses/types";
 import { normalizeOwnedCourse } from "@utils/normalize";
+import { withToast } from "@utils/toast";
 
 export default function ManageWrapper() {
   const { web3, contract } = useWeb3();
@@ -37,7 +38,7 @@ export default function ManageWrapper() {
     }));
   }
 
-  const searchCourse = async (hash: string): Promise<void> => {
+  const searchCourse = async (hash: string) => {
     const re = /[0-9A-Fa-f]{6}/g;
 
     if (hash && hash.length === 66 && re.test(hash)) {
@@ -61,16 +62,18 @@ export default function ManageWrapper() {
   const changeCourseState = async (
     courseHash: string,
     method: ContractMethod
-  ): Promise<void> => {
+  ) => {
     if (!account.data || !courseHash) return;
 
-    try {
-      await contract.methods[method](courseHash).send({
-        from: account.data,
-      });
-    } catch (e: any) {
-      throw new Error(e.message);
-    }
+    const toastPromise = contract.methods[method](courseHash).send({
+      from: account.data,
+    });
+
+    withToast(
+      toastPromise.then(() => {
+        managedCourses.mutate();
+      })
+    );
   };
 
   const handleCourseAction = (course: Course) => {
