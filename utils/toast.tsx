@@ -1,15 +1,11 @@
 import { toast } from "react-toastify";
 
-interface TransactionData {
-  transactionHash: string;
-}
-
 interface ErrorData {
   message?: string;
 }
 
-export const withToast = (promise: Promise<TransactionData>) => {
-  toast.promise<TransactionData, ErrorData>(
+export const withToast = (promise: Promise<any>) => {
+  toast.promise<any, ErrorData>(
     promise,
     {
       pending: {
@@ -25,6 +21,7 @@ export const withToast = (promise: Promise<TransactionData>) => {
       },
       success: {
         render({ data }) {
+
           return (
             <div>
               <p className="font-bold">

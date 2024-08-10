@@ -36,7 +36,7 @@
     "id": 1410476,
     "type": "Unity",
     "title": "The Complete Unity Guide 3D - Beginner to RPG Game Dev in C#",
-    "description": "Build 3 games & learn Unity practical way! Start with fundamentals and finish with an RPG game. Using Unity 2020 and C#",
+    "description": "Build 3 games & learn Unity practical way! Start with fundamentals and finish with an RPG game. Using Unity 2024 and C#",
     "coverImage": "https://thrangra.sirv.com/UnityJS.jpeg",
     "author": "Jhon Doe",
     "link": "https://academy.eincode.com/courses/the-complete-unity-guide-3d-beginner-to-rpg-game-dev-in-c",
@@ -84,7 +84,7 @@
     "createdAt": ""
   },
   {
-    "id": 1410496,
+    "id": 241356,
     "type": "Vue, React, Angular",
     "title": "Vue JS 3, React JS & Angular - Guide to Popular Frameworks",
     "description": "Understand basics and difficult parts of the 3 most popular frameworks - React JS, Angular and Vue. All in one course!",
@@ -117,14 +117,14 @@
     "createdAt": ""
   },
   {
-    "id": 1410491,
+    "id": 987654,
     "type": "React, Angular",
-    "title": "React, Angular, Node In-Depth Guide: Beginner to Pro (2020)",
+    "title": "React, Angular, Node In-Depth Guide: Beginner to Pro (2024)",
     "description": "Beginner to Advance Web Developer Guide. Master Angular (Angular 8+), React + Redux (React 16.12+) & Node with Mongo DB!",
     "coverImage": "https://thrangra.sirv.com/AngularJS.jpeg",
     "author": "Jhon Doe",
-    "link": "https://academy.eincode.com/courses/react-angular-node-in-depth-guide-beginner-to-pro-2020",
-    "slug": "react-angular-node-in-depth-guide-beginner-to-pro-2020",
+    "link": "https://academy.eincode.com/courses/react-angular-node-in-depth-guide-beginner-to-pro-2024",
+    "slug": "react-angular-node-in-depth-guide-beginner-to-pro-2024",
     "wsl": [
       "Develop Real-world web applications with React, Angular and Node",
       "Understand the processes and architecture of Angular, React and Node",
@@ -134,7 +134,7 @@
     "createdAt": ""
   },
   {
-    "id": 1410482,
+    "id": 635241,
     "type": "React JS",
     "title": "React JS & Firebase Complete Course (incl. Chat Application)",
     "description": "Create 'real world' React JS applications connected to Firestore (Firebase). Redux, authentication + real time features!",
@@ -150,7 +150,7 @@
     "createdAt": ""
   },
   {
-    "id": 1410492,
+    "id": 359862,
     "type": "Vue JS",
     "title": "Vue JS 2 &  Firebase Complete Course",
     "description": "Learn how to create 'real world' Vue JS 2 application connected to Firestore(Firebase) Database.",
@@ -216,7 +216,7 @@
     "createdAt": ""
   },
   {
-    "id": 1410487,
+    "id": 751842,
     "type": "Nuxt JS",
     "title": "The Complete Nuxt.js & Vue.js Course | Self Promo App",
     "description": "Complete Developer Guide covering Vue.js and Nuxt.js basic to advance concepts. Get your hands on real projects.",

@@ -255,7 +255,7 @@ export default function OrderModal({
             Submit
           </Button>
           <Button variant="danger" onClick={handleModalClose}>
-            Cancel
+            Close
           </Button>
         </div>
       </div>
