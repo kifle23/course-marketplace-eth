@@ -7,6 +7,7 @@ import { useWeb3 } from "@components/providers";
 import VerificationInput from "@components/ui/course/verification-input.component";
 import { Course, OwnedCourse } from "@content/courses/types";
 import { normalizeOwnedCourse } from "@utils/normalize";
+import { withToast } from "@utils/toast";
 
 export default function ManageWrapper() {
   const { web3, contract } = useWeb3();
@@ -58,19 +59,14 @@ export default function ManageWrapper() {
     setSearchedCourse(null);
   };
 
-  const changeCourseState = async (
-    courseHash: string,
-    method: ContractMethod
-  ): Promise<void> => {
+  const changeCourseState = (courseHash: string, method: ContractMethod) => {
     if (!account.data || !courseHash) return;
 
-    try {
-      await contract.methods[method](courseHash).send({
+    return withToast(
+      contract.methods[method](courseHash).send({
         from: account.data,
-      });
-    } catch (e: any) {
-      throw new Error(e.message);
-    }
+      })
+    );
   };
 
   const handleCourseAction = (course: Course) => {
