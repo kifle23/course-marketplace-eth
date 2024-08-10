@@ -21,7 +21,6 @@ export const withToast = (promise: Promise<any>) => {
       },
       success: {
         render({ data }) {
-
           return (
             <div>
               <p className="font-bold">
@@ -29,7 +28,11 @@ export const withToast = (promise: Promise<any>) => {
               </p>
               <p>Has been successfully processed.</p>
               <a
-                href={`https://sepolia.etherscan.io/tx/${data?.transactionHash}`}
+                href={
+                  process.env.NODE_ENV === "production"
+                    ? `https://sepolia.etherscan.io/tx/${data?.transactionHash}`
+                    : "#"
+                }
                 target="_blank"
                 rel="noopener noreferrer"
               >
