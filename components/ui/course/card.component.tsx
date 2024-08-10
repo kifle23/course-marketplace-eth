@@ -34,21 +34,9 @@ export default function Card({ course, displayPurchase }: CardProps) {
   const { ownedCourse } = useOwnedCourse(course, account.data);
   const [selectedCourse, setSelectedCourse] = useState<Course | null>(null);
   const [isNewPurchase, setIsNewPurchase] = useState(true);
-  const [isPurchased, setIsPurchased] = useState(false);
   const [isPurchasing, setIsPurchasing] = useState(false);
-  const [stateColor, setStateColor] = useState<{ text: string; bg: string }>();
 
   const hasOwner = !!ownedCourse?.data;
-
-  useEffect(() => {
-    if (hasOwner && isPurchased) {
-      setStateColor(STATE_COLORS.purchased);
-    } else if (ownedCourse?.data) {
-      setStateColor(
-        STATE_COLORS[ownedCourse.data.state as keyof typeof STATE_COLORS]
-      );
-    }
-  }, [hasOwner, isPurchased, ownedCourse?.data]);
 
   const purchaseCourse = async (order: Order) => {
     if (!selectedCourse || !web3 || !contract) {
@@ -78,12 +66,11 @@ export default function Card({ course, displayPurchase }: CardProps) {
 
       withToast(
         toastPromise.then(() => {
-          setIsPurchased(true);
+          ownedCourse?.mutate();
           setIsPurchasing(false);
         })
       );
     } catch {
-      setIsPurchased(false);
       setIsPurchasing(false);
     }
   };
@@ -132,26 +119,24 @@ export default function Card({ course, displayPurchase }: CardProps) {
 
     if (!displayPurchase) return null;
 
-    if ((network.isSupported && hasOwner) || isPurchased) {
+    if (network.isSupported && hasOwner) {
       return (
         <div className="flex">
           <Button variant="white" hoverable={false} className="mr-2" size="sm">
             Yours &#10004;
           </Button>
-          {!isPurchased &&
-            ownedCourse?.data.state === "deactivated" &&
-            !isPurchased && (
-              <Button
-                variant="primary"
-                onClick={() => {
-                  setIsNewPurchase(false);
-                  setSelectedCourse(course);
-                }}
-                size="sm"
-              >
-                Reactivate
-              </Button>
-            )}
+          {ownedCourse?.data.state === "deactivated" && (
+            <Button
+              variant="primary"
+              onClick={() => {
+                setIsNewPurchase(false);
+                setSelectedCourse(course);
+              }}
+              size="sm"
+            >
+              Reactivate
+            </Button>
+          )}
         </div>
       );
     }
@@ -172,6 +157,10 @@ export default function Card({ course, displayPurchase }: CardProps) {
     setSelectedCourse(null);
     setIsNewPurchase(true);
   }
+
+  const stateColor = ownedCourse.data
+    ? STATE_COLORS[ownedCourse.data.state as keyof typeof STATE_COLORS]
+    : null;
 
   return (
     <div className="bg-white rounded-xl shadow-md overflow-hidden md:max-w-2xl">
@@ -201,7 +190,7 @@ export default function Card({ course, displayPurchase }: CardProps) {
                   <span
                     className={`text-xs ${stateColor.text} ${stateColor.bg} font-semibold rounded-full p-2`}
                   >
-                    {ownedCourse.data.state === "purchased" || isPurchased ? (
+                    {ownedCourse.data.state === "purchased" ? (
                       <AnimateKeyframes
                         play
                         duration={2}
