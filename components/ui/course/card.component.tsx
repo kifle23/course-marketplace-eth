@@ -35,6 +35,7 @@ export default function Card({ course, displayPurchase }: CardProps) {
   const [selectedCourse, setSelectedCourse] = useState<Course | null>(null);
   const [isNewPurchase, setIsNewPurchase] = useState(true);
   const [isPurchased, setIsPurchased] = useState(false);
+  const [isPurchasing, setIsPurchasing] = useState(false);
   const [stateColor, setStateColor] = useState<{ text: string; bg: string }>();
 
   const hasOwner = !!ownedCourse?.data;
@@ -49,12 +50,6 @@ export default function Card({ course, displayPurchase }: CardProps) {
     }
   }, [hasOwner, isPurchased, ownedCourse?.data]);
 
-  const convertCourseIdToBytes16 = (courseId: number, web3: any): string => {
-    const hexString = web3.utils.toHex(courseId);
-    const paddedHex = web3.utils.padLeft(hexString, 32);
-    return paddedHex;
-  };
-
   const purchaseCourse = async (order: Order) => {
     if (!selectedCourse || !web3 || !contract) {
       return withToast(
@@ -63,8 +58,11 @@ export default function Card({ course, displayPurchase }: CardProps) {
         )
       );
     }
-    
-    const courseIdBytes = convertCourseIdToBytes16(Number(selectedCourse.id), web3);
+
+    const courseIdBytes = web3.utils.padLeft(
+      web3.utils.toHex(Number(selectedCourse.id)),
+      32
+    );
     const orderHash =
       web3.utils.soliditySha3(
         { type: "bytes16", value: courseIdBytes },
@@ -73,13 +71,20 @@ export default function Card({ course, displayPurchase }: CardProps) {
     const value = web3.utils.toWei(order.price, "ether") || "";
 
     try {
+      setIsPurchasing(true);
       const toastPromise = isNewPurchase
         ? _purchaseCourse(courseIdBytes, order, orderHash, value, web3)
         : _repurchaseCourse(orderHash, value);
 
-      withToast(toastPromise.then(() => setIsPurchased(true)));
+      withToast(
+        toastPromise.then(() => {
+          setIsPurchased(true);
+          setIsPurchasing(false);
+        })
+      );
     } catch {
       setIsPurchased(false);
+      setIsPurchasing(false);
     }
   };
 
@@ -158,10 +163,15 @@ export default function Card({ course, displayPurchase }: CardProps) {
         onClick={() => setSelectedCourse(course)}
         size="sm"
       >
-        Purchase
+        {isPurchasing ? <Loader size="sm" /> : "Purchase"}
       </Button>
     );
   };
+
+  function cleanModal() {
+    setSelectedCourse(null);
+    setIsNewPurchase(true);
+  }
 
   return (
     <div className="bg-white rounded-xl shadow-md overflow-hidden md:max-w-2xl">
@@ -221,10 +231,7 @@ export default function Card({ course, displayPurchase }: CardProps) {
             course={selectedCourse}
             onSubmit={purchaseCourse}
             isNewPurchase={isNewPurchase}
-            onClose={() => {
-              setSelectedCourse(null);
-              setIsNewPurchase(true);
-            }}
+            onClose={cleanModal}
           />
         </div>
       </div>

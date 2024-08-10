@@ -250,12 +250,13 @@ export default function OrderModal({
             disabled={formState.isDisabled}
             onClick={() => {
               onSubmit(order);
+              handleModalClose();
             }}
           >
             Submit
           </Button>
           <Button variant="danger" onClick={handleModalClose}>
-            Close
+            Cancel
           </Button>
         </div>
       </div>
