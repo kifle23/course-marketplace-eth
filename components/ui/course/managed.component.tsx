@@ -2,7 +2,7 @@
 import { useAdmin, useManagedCourses } from "@components/hooks/web3";
 import { CourseFilter, ManagedCourseCard } from "@components/ui/course";
 import { Button, Message } from "@components/ui/common";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useWeb3 } from "@components/providers";
 import VerificationInput from "@components/ui/course/verification-input.component";
 import { Course, OwnedCourse } from "@content/courses/types";
@@ -38,7 +38,7 @@ export default function ManageWrapper() {
     }));
   }
 
-  const searchCourse = async (hash: string): Promise<void> => {
+  const searchCourse = async (hash: string) => {
     const re = /[0-9A-Fa-f]{6}/g;
 
     if (hash && hash.length === 66 && re.test(hash)) {
@@ -59,12 +59,19 @@ export default function ManageWrapper() {
     setSearchedCourse(null);
   };
 
-  const changeCourseState = (courseHash: string, method: ContractMethod) => {
+  const changeCourseState = async (
+    courseHash: string,
+    method: ContractMethod
+  ) => {
     if (!account.data || !courseHash) return;
 
-    return withToast(
-      contract.methods[method](courseHash).send({
-        from: account.data,
+    const toastPromise = contract.methods[method](courseHash).send({
+      from: account.data,
+    });
+
+    withToast(
+      toastPromise.then(() => {
+        managedCourses.mutate();
       })
     );
   };

@@ -127,14 +127,15 @@ export default function Card({ course, displayPurchase }: CardProps) {
           </Button>
           {ownedCourse?.data.state === "deactivated" && (
             <Button
-              variant="primary"
+              disabled={isPurchasing}
+              variant={isPurchasing ? "light" : "primary"}
               onClick={() => {
                 setIsNewPurchase(false);
                 setSelectedCourse(course);
               }}
               size="sm"
             >
-              Reactivate
+              {isPurchasing ? <Loader size="sm" /> : "Reactivate"}
             </Button>
           )}
         </div>
