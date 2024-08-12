@@ -28,14 +28,14 @@ export default function Nav() {
                   Marketplace
                 </span>
               </ActiveLink>
-              <ActiveLink href="/blogs">
+              <ActiveLink href="/#">
                 <span className="font-medium mr-8 text-gray-500 hover:text-gray-900">
                   Blogs
                 </span>
               </ActiveLink>
             </div>
             <div className="hidden cm:flex items-center">
-              <ActiveLink href="/wishlist">
+              <ActiveLink href="/#">
                 <span className="font-medium mr-8 text-gray-500 hover:text-gray-900">
                   Wishlist
                 </span>
@@ -109,12 +109,12 @@ export default function Nav() {
                   Marketplace
                 </span>
               </ActiveLink>
-              <ActiveLink href="/blogs">
+              <ActiveLink href="/#">
                 <span className="block font-medium mb-4 text-gray-500 hover:text-gray-900">
                   Blogs
                 </span>
               </ActiveLink>
-              <ActiveLink href="/wishlist">
+              <ActiveLink href="/#">
                 <span className="block font-medium mb-4 text-gray-500 hover:text-gray-900">
                   Wishlist
                 </span>
